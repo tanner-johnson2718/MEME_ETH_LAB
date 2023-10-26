@@ -37,6 +37,7 @@
 // | Is a call to recv() garmented to return 1 and only 1 packet?
 // | Max Lengths w/ and w/out vlan shit??
 // | What happens when I dont call recv does that ring buffer fill??
+// | How do fd's play a role in sockets?
 // |
 // |---------------------------------------------------------------------------
 
@@ -48,6 +49,8 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <net/ethernet.h>
+#include <signal.h>
+#include <unistd.h>
 
 const int max_ethframe_size = 1522;
 const int raw_hex_dump_num_bytes_per_block = 8;
@@ -59,6 +62,8 @@ const int mac_dest_off = 0;
 const int mac_src_off = 6;
 const int eth_tag_offset = 12;
 const int payload_offset = 14;
+
+int keep_looping = 1;
 
 void raw_hex_dump(int len, unsigned char* buff)
 {
@@ -120,20 +125,28 @@ void frame_pretty_print(int len, unsigned char* buff)
 
 }
 
-// Input is a full eth frame
-unsigned char* parse_MAC_dest(int len, unsigned char* buff)
+void sig_int_handler(int num)
 {
-    return buff + mac_dest_off;
-}
-
-// Input is a full eth frame
-unsigned char* parse_MAC_src(int len, unsigned char* buff)
-{
-    return buff + mac_src_off;
+    keep_looping = 0;
+    printf("Killing Sniffer\n");
 }
 
 int main()
 {
+
+    // register our own signal handler for interrupt
+    struct sigaction new_action;
+    new_action.sa_handler = sig_int_handler;
+    sigemptyset(&new_action.sa_mask);
+    new_action.sa_flags = 0;
+
+    int ret = sigaction(SIGINT, &new_action, NULL);
+    if(ret < 0)
+    {
+        perror("Failed to register new sig int handler");
+        exit(1);
+    }
+    
     int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if(sock < 0)
     {
@@ -144,9 +157,13 @@ int main()
     ssize_t num_read = 0;
     unsigned char* buff = malloc(max_ethframe_size);
 
-    while(1)
+    while(keep_looping)
     {
         num_read = recv(sock, buff, max_ethframe_size, 0);
+        if(!keep_looping)
+        {
+            break;
+        }
 
         // recv should only return this in failure as we are using a blocking
         // call to recv
@@ -164,6 +181,7 @@ int main()
         frame_pretty_print(num_read, buff);
     }
 
+    close(sock);
     free(buff);
     return 0;
 }
