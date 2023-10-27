@@ -36,9 +36,9 @@ Some defining goals to get the project going and figure out a starting point are
 
 # Part 1 Hardware set up
 
+* [ ] Create a Raw Socket Library
 * [ ] Get source and tools to build and flash a minimal RPI image
 * [ ] Get RPI up and running with UART shell attached
-* [ ] Create a Raw Socket Library
 * [ ] Develop means of pushing code to RPI
 * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
 

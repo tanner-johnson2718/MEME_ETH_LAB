@@ -1,12 +1,16 @@
 // Some C socket code that messes with raw sockets. For now this program is a
-// poor mans wire shark and just dumps all frames seen on all interfaces.
+// poor mans wire shark and just dumps all frames seen on all interfaces. There
+// is an optional hardcoded param that allows one to specify a specific
+// interface for which to only display traffic from. 
 
 // |---------------------------------------------------------------------------
 // | Key Sys Calls
 // | ---------------------------------------------------------------------------
 // | 
-// | int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-// | num_read = recv(sock, buff, max_ethframe_size, 0);
+// | socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+// | recv(sock, buff, max_ethframe_size, 0);
+// | bind()
+// | ioctl() -> to get interface index off socket
 // |
 // |---------------------------------------------------------------------------
 
@@ -15,8 +19,9 @@
 // | Key Commands
 // |---------------------------------------------------------------------------
 // | 
-// | `ip a` | Shows all net interfaces, IP, and MAC 
-// | `arp`  | Shows all resolved MACs via ARP
+// | `ip a`       | Shows all net interfaces, IP, and MAC 
+// | `arp`        | Shows all resolved MACs via ARP
+// | `man packet` | man page on low level packets
 // |
 // |---------------------------------------------------------------------------
 
@@ -38,6 +43,8 @@
 // | Max Lengths w/ and w/out vlan shit??
 // | What happens when I dont call recv does that ring buffer fill??
 // | How do fd's play a role in sockets?
+// | How does the loopback interface work?
+// | Address families
 // |
 // |---------------------------------------------------------------------------
 
@@ -51,6 +58,11 @@
 #include <net/ethernet.h>
 #include <signal.h>
 #include <unistd.h>
+#include <string.h>
+#include <net/if.h>
+#include <linux/if_packet.h>
+#include <netinet/ether.h>
+#include <sys/ioctl.h>
 
 const int max_ethframe_size = 1522;
 const int raw_hex_dump_num_bytes_per_block = 8;
@@ -64,6 +76,8 @@ const int eth_tag_offset = 12;
 const int payload_offset = 14;
 
 int keep_looping = 1;
+
+const char* interface_name = "enp2s0";
 
 void raw_hex_dump(int len, unsigned char* buff)
 {
@@ -147,6 +161,7 @@ int main()
         exit(1);
     }
     
+    // Open raw socket
     int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if(sock < 0)
     {
@@ -154,6 +169,34 @@ int main()
         exit(1);
     }
 
+    // Bind to interface
+    struct sockaddr_ll inner_sockaddr;
+    struct ifreq interface_index;
+
+    memset(&inner_sockaddr, 0, sizeof(struct sockaddr_ll));
+    memset(&interface_index, 0, sizeof(struct ifreq));
+
+    strncpy(&interface_index.ifr_name, interface_name, strlen(interface_name));
+    ret = ioctl(sock, SIOCGIFINDEX, &interface_index);
+    if(ret < 0)
+    {
+        perror("ioctl");
+        exit(1);
+    }
+
+    inner_sockaddr.sll_family = AF_PACKET;
+    inner_sockaddr.sll_protocol = htons(ETH_P_ALL);
+    inner_sockaddr.sll_ifindex = interface_index.ifr_ifindex;
+
+    printf("Index of %s = %d\n", interface_name, interface_index.ifr_ifindex);
+
+    ret = bind(sock, &inner_sockaddr, sizeof(struct sockaddr_ll));
+    if(ret < 0)
+    {
+        perror("bind");
+        exit(1);
+    }
+    
     ssize_t num_read = 0;
     unsigned char* buff = malloc(max_ethframe_size);
 
@@ -181,6 +224,7 @@ int main()
         frame_pretty_print(num_read, buff);
     }
 
+    printf("Freeing Up Prog resources\n");
     close(sock);
     free(buff);
     return 0;

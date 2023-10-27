@@ -1,5 +1,6 @@
-all: raw.c
-	gcc -o raw raw.c
+all: sniff.c gen.c
+	gcc -o sniff sniff.c
+	gcc -o gen gen.c
 
 clean:
-	rm -rf raw
+	rm -rf sniff gebn
