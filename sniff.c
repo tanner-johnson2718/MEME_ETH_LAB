@@ -45,6 +45,7 @@
 // | How do fd's play a role in sockets?
 // | How does the loopback interface work?
 // | Address families
+// | http://www.microhowto.info/howto/capture_ethernet_frames_using_an_af_packet_socket_in_c.html#idm247
 // |
 // |---------------------------------------------------------------------------
 
@@ -77,7 +78,7 @@ const int payload_offset = 14;
 
 int keep_looping = 1;
 
-const char* interface_name = "enp2s0";
+const char* interface_name = "lo";
 
 void raw_hex_dump(int len, unsigned char* buff)
 {

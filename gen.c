@@ -5,7 +5,7 @@
 // Key Sys Calls:
 //   - send
 //   - socket
-//   - setsockopt
+//   - bind???
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +18,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <net/if.h>
+#include <linux/if_packet.h>
+#include <netinet/ether.h>
+#include <sys/ioctl.h>
 
 const int num_packets_to_send = 1;
 const int delay_ms = 1000;
@@ -36,7 +39,8 @@ int main()
 {
     unsigned char* packet_buffer = NULL;
     int sock = 0, ret = 0, i = 0, num_sent = 0;
-
+    struct sockaddr_ll inner_sockaddr;
+    struct ifreq interface_index;
 
     // Allocate Buffer 
     packet_buffer = malloc(packet_size);
@@ -70,11 +74,27 @@ int main()
     }
 
     // Bind it to the specified interface
-    ret = setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, 
-                     interface_name, strlen(interface_name));
+    memset(&inner_sockaddr, 0, sizeof(struct sockaddr_ll));
+    memset(&interface_index, 0, sizeof(struct ifreq));
+
+    strncpy(&interface_index.ifr_name, interface_name, strlen(interface_name));
+    ret = ioctl(sock, SIOCGIFINDEX, &interface_index);
     if(ret < 0)
     {
-        perror("Failed to bind socket");
+        perror("ioctl");
+        exit(1);
+    }
+
+    inner_sockaddr.sll_family = AF_PACKET;
+    inner_sockaddr.sll_protocol = htons(ETH_P_ALL);
+    inner_sockaddr.sll_ifindex = interface_index.ifr_ifindex;
+
+    printf("Index of %s = %d\n", interface_name, interface_index.ifr_ifindex);
+
+    ret = bind(sock, &inner_sockaddr, sizeof(struct sockaddr_ll));
+    if(ret < 0)
+    {
+        perror("bind");
         exit(1);
     }
 
