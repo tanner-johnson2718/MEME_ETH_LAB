@@ -2,10 +2,9 @@
 // out a hard coded interface. Will have hard coded params for setting size and
 // freq of packet transmits as well as a max number of packets sent
 
-// Key Sys Calls:
-//   - send
-//   - socket
-//   - bind???
+// sniff.c has some better doc and this file is meant to be rather basic.
+
+#define _GNU_SOURCE 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,7 +90,7 @@ int main()
 
     printf("Index of %s = %d\n", interface_name, interface_index.ifr_ifindex);
 
-    ret = bind(sock, &inner_sockaddr, sizeof(struct sockaddr_ll));
+    ret = bind(sock, (struct sockaddr*) &inner_sockaddr, sizeof(struct sockaddr_ll));
     if(ret < 0)
     {
         perror("bind");

@@ -11,9 +11,9 @@
 // | recv(sock, buff, max_ethframe_size, 0);
 // | bind()
 // | ioctl() -> to get interface index off socket
+// | send()
 // |
 // |---------------------------------------------------------------------------
-
 
 // |---------------------------------------------------------------------------
 // | Key Commands
@@ -25,7 +25,6 @@
 // |
 // |---------------------------------------------------------------------------
 
-
 // |---------------------------------------------------------------------------
 // | 802.3 Layer 2 Frame (Non VlAN i.e. 802.1Q)
 // |---------------------------------------------------------------------------
@@ -33,7 +32,6 @@
 // | MAC DST | MAC SRC | TAG | PAYLOAD | CRC | 
 // |    6    |    6    |  2  | 46-1500 |  4  |
 // |---------------------------------------------------------------------------
-
 
 // |---------------------------------------------------------------------------
 // | Questions 
@@ -44,11 +42,15 @@
 // | What happens when I dont call recv does that ring buffer fill??
 // | How do fd's play a role in sockets?
 // | How does the loopback interface work?
-// | Address families
+// | Address families?
 // | http://www.microhowto.info/howto/capture_ethernet_frames_using_an_af_packet_socket_in_c.html#idm247
-// |
+// | when does the crc get injected?
+// | Is a crc attached when I read a AF_PACKET frame?
+// | What do the different sends and recvs do?
+// | 
 // |---------------------------------------------------------------------------
 
+#define _GNU_SOURCE 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,6 +82,8 @@ int keep_looping = 1;
 
 const char* interface_name = "lo";
 
+const int print_payload = 0;
+
 void raw_hex_dump(int len, unsigned char* buff)
 {
     int i;
@@ -101,7 +105,6 @@ void raw_hex_dump(int len, unsigned char* buff)
     }
 
     printf("\n");
-
 }
 
 void frame_pretty_print(int len, unsigned char* buff)
@@ -109,6 +112,8 @@ void frame_pretty_print(int len, unsigned char* buff)
     int i, off = mac_dest_off;
     
     printf("------------------------------------------------------------\n");
+
+    printf("PAC LEN = %d\n", len);
 
     printf("MAC DST = ");
     for(i = 0; i < mac_len; ++i)
@@ -132,12 +137,15 @@ void frame_pretty_print(int len, unsigned char* buff)
     off = len - crc_len;
     printf("CRC     = %02x %02x %02x %02x\n", buff[off], buff[off+1], buff[off+2], buff[off+3]);
 
-    off = payload_offset;
-    printf("PAYLOAD = \n\n");
-    raw_hex_dump(len - off - crc_len, buff + off);
+    if(print_payload)
+    {
+        off = payload_offset;
+        printf("PAYLOAD = \n\n");
+        raw_hex_dump(len - off - crc_len, buff + off);
+    }
+    
 
     printf("------------------------------------------------------------\n\n");
-
 }
 
 void sig_int_handler(int num)
@@ -149,13 +157,27 @@ void sig_int_handler(int num)
 int main()
 {
 
-    // register our own signal handler for interrupt
     struct sigaction new_action;
+    int ret, sock;
+    struct sockaddr_ll inner_sockaddr;
+    struct ifreq interface_index;
+    ssize_t num_read = 0;
+    unsigned char* buff = NULL;
+
+    // Allocate packet buffer
+    buff = malloc(max_ethframe_size);
+    if(buff == NULL)
+    {
+        perror("malloc failed");
+        exit(1);
+    }
+
+    // register our own signal handler for interrupt
     new_action.sa_handler = sig_int_handler;
     sigemptyset(&new_action.sa_mask);
     new_action.sa_flags = 0;
 
-    int ret = sigaction(SIGINT, &new_action, NULL);
+    ret = sigaction(SIGINT, &new_action, NULL);
     if(ret < 0)
     {
         perror("Failed to register new sig int handler");
@@ -163,7 +185,7 @@ int main()
     }
     
     // Open raw socket
-    int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+    sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if(sock < 0)
     {
         perror("Failed to create socket");
@@ -171,9 +193,6 @@ int main()
     }
 
     // Bind to interface
-    struct sockaddr_ll inner_sockaddr;
-    struct ifreq interface_index;
-
     memset(&inner_sockaddr, 0, sizeof(struct sockaddr_ll));
     memset(&interface_index, 0, sizeof(struct ifreq));
 
@@ -191,15 +210,12 @@ int main()
 
     printf("Index of %s = %d\n", interface_name, interface_index.ifr_ifindex);
 
-    ret = bind(sock, &inner_sockaddr, sizeof(struct sockaddr_ll));
+    ret = bind(sock, (struct sockaddr*) &inner_sockaddr, sizeof(struct sockaddr_ll));
     if(ret < 0)
     {
         perror("bind");
         exit(1);
     }
-    
-    ssize_t num_read = 0;
-    unsigned char* buff = malloc(max_ethframe_size);
 
     while(keep_looping)
     {
@@ -223,6 +239,7 @@ int main()
         }
 
         frame_pretty_print(num_read, buff);
+        
     }
 
     printf("Freeing Up Prog resources\n");

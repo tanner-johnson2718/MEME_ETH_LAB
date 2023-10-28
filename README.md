@@ -36,7 +36,7 @@ Some defining goals to get the project going and figure out a starting point are
 
 # Part 1 Hardware set up
 
-* [ ] Create a Raw Socket Library
+* [ ] [P1.1](./P1.1/) - Create a Raw Socket Example Program
 * [ ] Get source and tools to build and flash a minimal RPI image
 * [ ] Get RPI up and running with UART shell attached
 * [ ] Develop means of pushing code to RPI
