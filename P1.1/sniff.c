@@ -197,9 +197,6 @@ int main()
     }
 
     // Bind to interface
-    memset(&inner_sockaddr, 0, sizeof(struct sockaddr_ll));
-    memset(&interface_index, 0, sizeof(struct ifreq));
-
     strncpy(&interface_index.ifr_name, interface_name, strlen(interface_name));
     ret = ioctl(sock, SIOCGIFINDEX, &interface_index);
     if(ret < 0)

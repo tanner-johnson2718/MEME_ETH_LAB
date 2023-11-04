@@ -13,12 +13,14 @@ sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
 // to bind our traffic too. IOCTL provides a programattic way of interfacing
 // with kernel systems and data structures from userspace. In this case we use
 // it to query the internal index of a specified interface.
+
+struct ifreq interface_index = {0};
+strncpy(&interface_index.ifr_name, interface_name, strlen(interface_name));
 ret = ioctl(sock, SIOCGIFINDEX, &interface_index);
 ```
 
 ```C
-struct sockaddr_ll inner_sockaddr;
-struct ifreq interface_index;
+struct sockaddr_ll inner_sockaddr = {0};
 
 inner_sockaddr.sll_family = AF_PACKET;
 inner_sockaddr.sll_protocol = htons(ETH_P_ALL);
@@ -41,6 +43,7 @@ num_sent = send(sock, packet_buffer, packet_size, 0);
 * interface
 * binding
 * Address Families (AF)
+* 802.3 Ethernet Frame
 
 # Resources
 * `man socket`
