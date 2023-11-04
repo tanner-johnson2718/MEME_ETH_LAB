@@ -5,7 +5,5 @@ The goal of this step is to use BuildRoot to compile and flash a micro SD with a
 # Kernel Build ENV set up
 
 ```bash
-# Pull the MEME OS repo
-git submodule add https://github.com/tanner-johnson2718/MEME_OS
 
 ```
