@@ -30,7 +30,7 @@ ret = bind(sock, (struct sockaddr*) &inner_sockaddr, sizeof(struct sockaddr_ll))
 ```
 
 ```C
-num_read = recv(sock, buff, max_ethframe_size, 0);
+num_read = recv(sock, buff, size, 0);
 ```
 
 ```C
@@ -44,6 +44,9 @@ num_sent = send(sock, packet_buffer, packet_size, 0);
 * binding
 * Address Families (AF)
 * 802.3 Ethernet Frame
+* ARP tables
+* `ip` command
+* `arp` command
 
 # Resources
 * `man socket`
@@ -54,3 +57,22 @@ num_sent = send(sock, packet_buffer, packet_size, 0);
 * `man packet`
 * http://www.microhowto.info/howto/capture_ethernet_frames_using_an_af_packet_socket_in_c.html#idm247
 * https://en.wikipedia.org/wiki/Ethernet_frame
+
+# Where to go next
+
+## Lab / Coding Next steps
+* Run this code on physical hardware
+    * Does the CRC get injected?
+* Don't call a recv and see if we can overfill the packet buffer
+* Get the RPI up
+* Get the IEEE standards for this stuff
+
+## Study Questions
+
+* How are sockets implemented at the kernel level
+    * How to FDs play a role
+* Does a recv return 1 and only 1 packet
+* What is the actual no shit max length of an ETH frame
+* Address Families?
+* What are the different send and recv's
+* See if we can get the actual Linux kernel documentation
