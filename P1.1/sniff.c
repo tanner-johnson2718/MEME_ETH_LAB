@@ -43,7 +43,6 @@
 // | How do fd's play a role in sockets?
 // | How does the loopback interface work?
 // | Address families?
-// | http://www.microhowto.info/howto/capture_ethernet_frames_using_an_af_packet_socket_in_c.html#idm247
 // | when does the crc get injected?
 // | Is a crc attached when I read a AF_PACKET frame?
 // | What do the different sends and recvs do?
