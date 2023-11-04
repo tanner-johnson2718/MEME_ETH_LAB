@@ -66,6 +66,7 @@
 #include <linux/if_packet.h>
 #include <netinet/ether.h>
 #include <sys/ioctl.h>
+#include <time.h>
 
 const int max_ethframe_size = 1522;
 const int raw_hex_dump_num_bytes_per_block = 8;
@@ -83,6 +84,8 @@ int keep_looping = 1;
 const char* interface_name = "lo";
 
 const int print_payload = 0;
+const int sec_mod_factor = 1000;
+const int nsec_div_factor = 1000*1000;     
 
 void raw_hex_dump(int len, unsigned char* buff)
 {
@@ -107,11 +110,13 @@ void raw_hex_dump(int len, unsigned char* buff)
     printf("\n");
 }
 
-void frame_pretty_print(int len, unsigned char* buff)
+void frame_pretty_print(int len, unsigned char* buff, struct timespec time_now)
 {
     int i, off = mac_dest_off;
     
     printf("------------------------------------------------------------\n");
+
+    printf("TIME   = %d.%d\n", time_now.tv_sec % sec_mod_factor, time_now.tv_nsec / nsec_div_factor);
 
     printf("PAC LEN = %d\n", len);
 
@@ -156,13 +161,13 @@ void sig_int_handler(int num)
 
 int main()
 {
-
     struct sigaction new_action;
     int ret, sock;
     struct sockaddr_ll inner_sockaddr;
     struct ifreq interface_index;
     ssize_t num_read = 0;
     unsigned char* buff = NULL;
+    struct timespec time_now = {0};
 
     // Allocate packet buffer
     buff = malloc(max_ethframe_size);
@@ -220,6 +225,7 @@ int main()
     while(keep_looping)
     {
         num_read = recv(sock, buff, max_ethframe_size, 0);
+        clock_gettime(CLOCK_REALTIME, &time_now);
         if(!keep_looping)
         {
             break;
@@ -238,7 +244,7 @@ int main()
             printf("WARNING, recv packet of max length\n");
         }
 
-        frame_pretty_print(num_read, buff);
+        frame_pretty_print(num_read, buff, time_now);
         
     }
 

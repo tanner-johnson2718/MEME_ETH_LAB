@@ -34,7 +34,7 @@ Some defining goals to get the project going and figure out a starting point are
 | Ethernet Cords x2 | - | - |
 
 
-# Part 1 Hardware set up
+# Part 1 Hardware and Init Software set up
 
 * [ ] [P1.1](./P1.1/) - Create a Raw Socket Example Program
 * [ ] Get source and tools to build and flash a minimal RPI image
