@@ -37,7 +37,7 @@ Some defining goals to get the project going and figure out a starting point are
 # Part 1 Hardware and Init Software set up
 
 * [X] [P1.1](./P1.1/) - Create a Raw Socket Example Program
-* [ ] [P1.2](./P1.2%20RPI%20Image/) - Use BuildRoot to build and make loadable image for the RPI
+* [ ] [P1.2](./P1.2/) - Use BuildRoot to build and make loadable image for the RPI
 * [ ] Get RPI up and running with UART shell attached
 * [ ] Develop means of pushing code to RPI
 * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
