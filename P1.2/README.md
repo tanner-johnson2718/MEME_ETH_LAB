@@ -23,6 +23,36 @@ make raspberrypi4_64_defconfig
 # a 64bit RPI 4. This can be saved off and modified later. Now build the image
 make
 ```
+
+# RPI Init Set UP
+
+```bash
+# Move to Directory where the output image, sdcard.img resides
+cd output/images
+
+# Plug the micro sd into the build PC. Use one of the following to get the device name
+lsblk
+dmesg
+
+# This will give you the device name, partition name, and the mound location. Umount the partition and the mount location
+sudo umount /media/user/3158-99
+sudo umount /dev/mmcblk0p0
+
+# Flash the image to the SD card
+sudo dd if=sdcard.img of=/dev/mmcblk0
+
+# Put the micro sd into the PI and connct the GND (6), UART TX (8), and UART RX (10) pins on the rpi to the UART to USB adapter. Plug USB adapter into build PC. Run the following to see the dev name
+dmesg
+
+# Plug in RPI power supply and then connect to rpi
+minicom -D /dev/ttyUSB0 -b 115200
+
+# Once in mini com CTL A is the escape key. Shift X to exit. SHift O to access options. In options->Serial Port you may have to turn off hardware flow control.
+```
+
+# Set up GDB and Attach Over UART
+
+
 # Resources
 
 * https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa817
