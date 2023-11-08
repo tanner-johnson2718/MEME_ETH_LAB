@@ -38,8 +38,24 @@ Some defining goals to get the project going and figure out a starting point are
 
 * [X] [P1.1](./P1.1/) - Create a Raw Socket Example Program
 * [ ] [P1.2](./P1.2/) - Use BuildRoot to build and make loadable image for the RPI
-* [ ] Get RPI up and running with UART shell attached
+* [ ] Connect to RPI via UART terminal
 * [ ] Develop means of pushing code to RPI
 * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
 
-# Part 2 
+# Part 2 Linux Software Stack Exploration
+
+* [ ] What is a socket? Binding?
+* [ ] Address Families?
+* [ ] NIC Ring Buffer
+* [ ] How are Inturrupts generated
+* [ ] Track a Packet from Send to  Recv in Userspaces
+* [ ] IEEE Ethernet Frame spec
+
+# Part 3 RPI Network Exploration
+
+* [ ] MII and MDIO
+* [ ] Device Tree
+* [ ] NIC on RPI
+* [ ] What is each wire on a Cat 5e cable doing
+* [ ] What happens when I first plug in a cord
+* [ ] Trace the physcial connections from

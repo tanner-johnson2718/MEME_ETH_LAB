@@ -23,3 +23,6 @@ make raspberrypi4_64_defconfig
 # a 64bit RPI 4. This can be saved off and modified later. Now build the image
 make
 ```
+# Resources
+
+* https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa817
