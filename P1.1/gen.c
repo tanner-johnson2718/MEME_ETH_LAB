@@ -34,17 +34,37 @@ const unsigned char mac_src[6] = {0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c};
 const unsigned char mac_dst[6] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
 const unsigned char tag[2] = {0x69, 0x69};
 
-const char* interface_name = "lo";
-// const char* interface_name = "enp2s0";
-// const char* interface_name = "wlp5s0";
+char interface_name[16];
 
-int main()
+int main(int argc, char** argv)
 {
     unsigned char* packet_buffer = NULL;
     int sock = 0, ret = 0, i = 0, num_sent = 0;
     struct sockaddr_ll inner_sockaddr = {0};
     struct ifreq interface_index = {0};
     struct timespec time = {0}, time_now = {0};
+
+    // process comannd line args. Expects ./<prog> <if_name>
+    if(argc != 2)
+    {
+        printf("ERROR usage ./%s <if_name>\n", argv[0]);
+        exit(1);
+    }
+
+    if(strlen(argv[1]) > 15)
+    {
+        printf("ERROR interface name to long\n");
+        exit(1);
+    }
+
+    i = 0;
+    while(argv[1][i] != (char) 0)
+    {
+        interface_name[i] = argv[1][i];
+        ++i;
+    }
+
+    interface_name[i] = (char) 0;
 
     time.tv_nsec = (delay_ms % 1000)*1000*1000;
     time.tv_sec = delay_ms / 1000;

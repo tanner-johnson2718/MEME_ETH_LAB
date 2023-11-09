@@ -80,7 +80,7 @@ const int payload_offset = 14;
 
 int keep_looping = 1;
 
-const char* interface_name = "lo";
+char interface_name[16];
 
 const int print_payload = 0;
 const int sec_mod_factor = 1000;
@@ -115,7 +115,7 @@ void frame_pretty_print(int len, unsigned char* buff, struct timespec time_now)
     
     printf("------------------------------------------------------------\n");
 
-    printf("TIME   = %d.%d\n", time_now.tv_sec % sec_mod_factor, time_now.tv_nsec / nsec_div_factor);
+    printf("TIME   = %ld.%ld\n", time_now.tv_sec % sec_mod_factor, time_now.tv_nsec / nsec_div_factor);
 
     printf("PAC LEN = %d\n", len);
 
@@ -158,15 +158,37 @@ void sig_int_handler(int num)
     printf("Killing Sniffer\n");
 }
 
-int main()
+int main(int argc, char** argv)
 {
     struct sigaction new_action;
-    int ret, sock;
+    int ret, sock, i;
     struct sockaddr_ll inner_sockaddr;
     struct ifreq interface_index;
     ssize_t num_read = 0;
     unsigned char* buff = NULL;
     struct timespec time_now = {0};
+
+    // process comannd line args. Expects ./<prog> <if_name>
+    if(argc != 2)
+    {
+        printf("ERROR usage ./%s <if_name>\n", argv[0]);
+        exit(1);
+    }
+
+    if(strlen(argv[1]) > 15)
+    {
+        printf("ERROR interface name to long\n");
+        exit(1);
+    }
+
+    i = 0;
+    while(argv[1][i] != (char) 0)
+    {
+        interface_name[i] = argv[1][i];
+        ++i;
+    }
+
+    interface_name[i] = (char) 0;
 
     // Allocate packet buffer
     buff = malloc(max_ethframe_size);

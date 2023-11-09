@@ -50,7 +50,7 @@ minicom -D /dev/ttyUSB0 -b 115200
 # Once in mini com CTL A is the escape key. Shift X to exit. SHift O to access options. In options->Serial Port you may have to turn off hardware flow control.
 ```
 
-# Set up GDB and Attach Over UART
+# Build Kernel with proper Debug Symbols and Build Cross-Debugger
 
 ```bash
 # Rebuilt w/ debug symbols. This requires one to run the following to get to the linux build menu
@@ -58,8 +58,6 @@ make linux-menuconfig
 
 # From here go to the Kernel Hacking->Build w/ Debug info. Select Yes. This opens sub menu to turn on GDB scripts. Select yes. Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. Now just rebuild the kernel and image. Also in the buildroot menuconfig besure to set kernel debugging options found in in build options. Also be make sure a crosss debuger is built in toolchain options. All of these options are saved below when we copy off the buildroot .config into the scripts dir. 
 make all 
-
-# Now take the micro SD and plug it into the host. Add "kgdboc=ttyAMA0,115200" to the cmdline.txt file found in the boot partition.
 ```
 
 # Cross Compile for RPI
@@ -102,7 +100,5 @@ ln -s <non-relative-path>/Makefile ./buildroot_usr_src/ethraw/src/Makfile
 
 # Resources
 
-* https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa817
-* https://gist.github.com/elFarto/1f9ba845e5ba3539a2c914aae1f4a1e4
+* https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa81
 * https://github.com/tanner-johnson2718/MEME_OS/tree/master
-* https://winjia.medium.com/linux-using-minicom-to-transfer-data-between-host-and-development-board-platform-f67133f386e2
