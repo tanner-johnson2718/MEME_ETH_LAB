@@ -56,8 +56,10 @@ minicom -D /dev/ttyUSB0 -b 115200
 # Rebuilt w/ debug symbols. This requires one to run the following to get to the linux build menu
 make linux-menuconfig
 
-# From here go to the Kernel Hacking->Build w/ Debug info. Select Yes. This opens sub menu to turn on GDB scripts. Select yes. Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. Now just rebuild the kernel and image.
+# From here go to the Kernel Hacking->Build w/ Debug info. Select Yes. This opens sub menu to turn on GDB scripts. Select yes. Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. Now just rebuild the kernel and image. Also in the buildroot menuconfig besure to set kernel debugging options found in in build options. Also be make sure a crosss debuger is built in toolchain options. All of these options are saved below when we copy off the buildroot .config into the scripts dir. 
 make all 
+
+# Now take the micro SD and plug it into the host. Add "kgdboc=ttyAMA0,115200" to the cmdline.txt file found in the boot partition.
 ```
 
 # Cross Compile for RPI
@@ -93,6 +95,8 @@ ln -s <non-relative-path>/Makefile ./buildroot_usr_src/ethraw/src/Makfile
 
 # In the event you change the source code or the meta data found in buildroot_usr_src one can run the following to rebuild the app and the sd image containing the app
 ./scripts/rebuild_app.sh ethraw
+
+# The exe created can be found in ./buildroot/output/build/<package_name>. But the rootfs shoud now have this exe saved in it, thus copying over the new image requires just reflashing the sd card or one can copy it using a flash drive or somthing. 
 ```
 
 
@@ -101,3 +105,4 @@ ln -s <non-relative-path>/Makefile ./buildroot_usr_src/ethraw/src/Makfile
 * https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa817
 * https://gist.github.com/elFarto/1f9ba845e5ba3539a2c914aae1f4a1e4
 * https://github.com/tanner-johnson2718/MEME_OS/tree/master
+* https://winjia.medium.com/linux-using-minicom-to-transfer-data-between-host-and-development-board-platform-f67133f386e2

@@ -40,8 +40,8 @@ Some defining goals to get the project going and figure out a starting point are
 * [ ] [P1.2](./P1.2/) - Use BuildRoot to build and make loadable image for the RPI
     * [X] Connect to RPI via UART terminal
     * [ ] Connect GDB debugger to rpi over UART.
-    * [ ] Develop means of pushing code to RPI
-        * [ ] Develop a means of cross compiling
+    * [X] Develop means of pushing code to RPI
+        * [X] Develop a means of cross compiling
     * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
 
 # Part 2 Linux Software Stack Exploration on RPI
