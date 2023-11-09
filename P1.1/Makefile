@@ -1,6 +1,6 @@
 all: sniff.c gen.c
-	gcc -o sniff sniff.c
-	gcc -o gen gen.c
+	$(CC) $(CFLAGS) -o sniff sniff.c
+	$(CC) $(CFLAGS) -o gen gen.c
 
 clean:
-	rm -rf sniff gen
+	rm -rf sniff gen *.o

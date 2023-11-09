@@ -52,7 +52,52 @@ minicom -D /dev/ttyUSB0 -b 115200
 
 # Set up GDB and Attach Over UART
 
+```bash
+# Rebuilt w/ debug symbols. This requires one to run the following to get to the linux build menu
+make linux-menuconfig
+
+# From here go to the Kernel Hacking->Build w/ Debug info. Select Yes. This opens sub menu to turn on GDB scripts. Select yes. Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. Now just rebuild the kernel and image.
+make all 
+```
+
+# Cross Compile for RPI
+
+```bash
+# We will just use the same method and sets of scripts to cross compile a use space app as we did in MEME OS. Before we copy over our MEME_OS scripts, we need to do some set up:
+mkdir buildroot_usr_src
+mkdir buildroot_kmod_src
+mkdir scripts
+cp buildroot/.config scripts/buildroot.config
+cp buildroot/output/build/linux-custom/.config ./scripts/.config
+cp buildroot/package/Config.in ./scripts/Config.in
+
+# Now copy over the scripts from MEME_OS. We really should do this via a git sub module, but we are lazy so assume MEME_OS is in the dir level as this repo and execute
+cp ../MEME_OS/scripts/build.sh ./scripts/
+cp ../MEME_OS/scripts/create_empty_app.sh ./scripts/
+cp ../MEME_OS/scripts/env_init.sh ./scripts
+cp ../MEME_OS/scripts/rebuild_app.sh ./scripts/
+cp ../MEME_OS/scripts/rebuild_linux.sh ./scripts/
+cp ../MEME_OS/scripts/rebuild_kmod.sh ./scripts/
+
+# From here the only change we made is to add a USERSPACE_APP_DIR and KMOD_APP_DIR to env init and update all references to the user space app and kmod dirs to use this variable instead of a hard coded reference. Finally we used git rev 6d86e84 of MEME_OS for these scripts. Now we can set up our first user space app to be cross compild.
+source ./scripts/env_init.sh
+./scripts/create_empty_app.sh ethraw
+
+# Just create sym links in the build user src dir. We cp the source into the buildroot dir so a symlink that points to the code in the Part 1.1 will suffice and mitigates severla copies floating around.
+ln -s <non-relative-path>/gen.c ./buildroot_usr_src/ethraw/src/gen.c
+ln -s <non-relative-path>/sniff.c ./buildroot_usr_src/ethraw/src/sniff.c
+ln -s <non-relative-path>/Makefile ./buildroot_usr_src/ethraw/src/Makfile
+
+# Next update the ethraw.mk build script created in the create_empty_app script. Update to match that names, paths, etc of building this program. From there we can build everything
+./scripts/build.sh
+
+# In the event you change the source code or the meta data found in buildroot_usr_src one can run the following to rebuild the app and the sd image containing the app
+./scripts/rebuild_app.sh ethraw
+```
+
 
 # Resources
 
 * https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa817
+* https://gist.github.com/elFarto/1f9ba845e5ba3539a2c914aae1f4a1e4
+* https://github.com/tanner-johnson2718/MEME_OS/tree/master

@@ -42,9 +42,9 @@ Some defining goals to get the project going and figure out a starting point are
     * [ ] Connect GDB debugger to rpi over UART.
     * [ ] Develop means of pushing code to RPI
         * [ ] Develop a means of cross compiling
-* [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
+    * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
 
-# Part 2 Linux Software Stack Exploration
+# Part 2 Linux Software Stack Exploration on RPI
 
 * [ ] What is a socket? Binding?
 * [ ] Address Families?
@@ -53,7 +53,7 @@ Some defining goals to get the project going and figure out a starting point are
 * [ ] Track a Packet from Send to  Recv in Userspaces
 * [ ] IEEE Ethernet Frame spec
 
-# Part 3 RPI Network Exploration
+# Part 3 RPI Network Hardware Exploration
 
 * [ ] MII and MDIO
 * [ ] Device Tree
