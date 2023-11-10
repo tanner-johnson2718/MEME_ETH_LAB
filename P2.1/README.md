@@ -1,8 +1,8 @@
 # P2.1 Userspace and Command Line tool Exploration
 
-# Sysfs
+# Sysfs interfave of ETH NIC on PI
 
-* used `/sys/class/net` 
+* used `/sys/class/net/eth0` to find NIC sysfs entry
 
 ## Sysfs Appendix
 
@@ -21,6 +21,23 @@ drwxr-xr-x    7 root     root             0 Jan  1 00:00 fs
 drwxr-xr-x   12 root     root             0 Jan  1 00:00 kernel
 drwxr-xr-x   70 root     root             0 Jan  1 00:00 module
 drwxr-xr-x    2 root     root             0 Jan  1 00:00 power
+```
+
+### /sys/class
+
+This dir appears to enumerate all the devices registered to the kernel based on its "class" of the device. `tree -L 2 /sys/class` gives a pretty good graphical representation of all devices. Here is a small snippit from the output of this command on the rpi:
+
+```
+/sys/class
+
+...
+
+|-- net
+|   |-- eth0 -> ../../devices/platform/scb/fd580000.ethernet/net/eth0
+|   `-- lo -> ../../devices/virtual/net/lo
+
+...
+
 ```
 
 ## Resources

@@ -23,16 +23,6 @@ Some defining goals to get the project going and figure out a starting point are
 * Catalog important Linux commands
 * Use and read Official IEEE standards
 
-# Hardware Requirements
-
-| Hardware | Specific Model We Use | Comments |
-| --- | --- | --- |
-| Linux Laptop | - | - |
-| RPI | - | - |
-| Uart to USB cable | - | - 
-| Ethernet Switch | - | - |
-| Ethernet Cords x2 | - | - |
-
 
 # Part 1 Hardware and Init Software set up
 
