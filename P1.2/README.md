@@ -54,10 +54,23 @@ minicom -D /dev/ttyUSB0 -b 115200
 # Build Kernel with proper Debug Symbols and Build Cross-Debugger
 
 ```bash
-# Rebuilt w/ debug symbols. This requires one to run the following to get to the linux build menu
+# Rebuild w/ debug symbols. This requires one to run the following to get to the linux build menu. In this build menu we select the various options
+#    * Kernel Hacking -> Compiler Time Checks -> Build w/ Debug info 
+#    * Opens up new option ... -> Provide GDB Scripts. Select yes. 
+#    * Kernel Hacking -> Generic Kernel Debugging Instrumets -> KGDB
+#    * ... KGDB -> KGDB over serail.
+# Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. 
 make linux-menuconfig
+cp buildroot/output/build/linux-custom/.config ./scripts/.config
 
-# From here go to the Kernel Hacking->Build w/ Debug info. Select Yes. This opens sub menu to turn on GDB scripts. Select yes. Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. Now just rebuild the kernel and image. Also in the buildroot menuconfig besure to set kernel debugging options found in in build options. Also be make sure a crosss debuger is built in toolchain options. All of these options are saved below when we copy off the buildroot .config into the scripts dir.
+# Also in the buildroot menuconfig besure to set kernel debugging options found in in build options. Also be make sure a crosss debuger is built in toolchain options. All of these options are saved below when we copy off the buildroot .config into the scripts dir.
+#   * Tool Chain -> Build Cross GDB for host
+#   * Build Options -> Build packages with debug symbols
+#   * Build Options -> Build packages wit runtime debug symbols
+#   * Build Options -> Strip target binaries
+#   * Kernel -> set .config path to "$(TOPDIR)/../scripts/.config"
+make menuconfig
+cp ./buildroot/.config ./scripts/buildroot.config
 make all 
 ```
 
@@ -100,7 +113,29 @@ ln -s <non-relative-path>/Makefile ./buildroot_usr_src/ethraw/src/Makfile
 
 # Attaching Host GDB to RPI Running Kernel
 
+```bash
+# Make sure kgdboc=ttyAMA0,115200 is in cmdline.txt or configure after boot on PI echo ttyS0 > /sys/module/kgdboc/parameters/kgdboc. cmdline.txt is found in the rpi-firmware package and after build is found in the first partition on the bootable media.
+
+# We used sudo minicom -s to set all the defaults we needed i.e. port, baud, hw flow control, etc. so we could just open minicom without setting this every time. use minicom to connect to the board and run
+echo g > /proc/sysrq-trigger
+
+# On the host side open up the arm gdb with the linux debug symbols
+cd buildroot
+./output/host/bin/aarch64-linux-gdb ./output/build/linux-custom/vmlinux
+
+# In gdb set baud and attach
+(gdb) set serial baud 115200
+(gdb) target remote /dev/ttyUSB0
+```
+
+# Follow Up Questions and Analysis
+
+
 # Resources
 
 * https://medium.com/@hungryspider/building-custom-linux-for-raspberry-pi-using-buildroot-f81efc7aa81
 * https://github.com/tanner-johnson2718/MEME_OS/tree/master
+* https://planeta.github.io/programming/linux-kernel-debugging/
+* https://www.kernel.org/doc/html/v4.14/dev-tools/kgdb.html
+* https://stackoverflow.com/questions/14584504/problems-to-connect-gdb-over-an-serial-port-to-an-kgdb-build-kernel
+* https://gist.github.com/elFarto/1f9ba845e5ba3539a2c914aae1f4a1e4

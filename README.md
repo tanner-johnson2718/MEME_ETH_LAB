@@ -30,23 +30,22 @@ Some defining goals to get the project going and figure out a starting point are
     * [X] Connect to RPI via UART terminal
     * [X] Develop means of pushing code to RPI
         * [X] Develop a means of cross compiling
+    * [X] Connect GDB debugger to rpi over UART.
     * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
-    * [ ] Connect GDB debugger to rpi over UART.
 
 # Part 2 Linux Software Stack Exploration on RPI
 
 * [ ] [P2.1](./P2.1/) - Use sysfs kernel interface to engage with NIC driver
-* [ ] [P2.2](./P2.2/) Set of Useful Command line args:
-* [ ] Reverse Engineer the BCM 2711 genet driver
-* [ ] Use GDB to reverse Engineer a socket() call.
+* [ ] [P2.2](./P2.2/)Use GDB to reverse Engineer a socket() call.
     * [ ] Find Def of relavent data structures
     * [ ] Create a call graph
     * [ ] Annotate importat Files
+* [ ] Reverse Engineer the BCM 2711 genet driver
 * [ ] Use GDB to reverse Engineer a bind() call.
     * [ ] Find Def of relavent data structures
     * [ ] Create a call graph
     * [ ] Annotate importat Files
-
+* [ ] Set of Useful Command line args:
 * [ ] Track a Packet from Send to Recv in Userspaces
 * [ ] Random Clean Up
     * [ ] Address Families?
