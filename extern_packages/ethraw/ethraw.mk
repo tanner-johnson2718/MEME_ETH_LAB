@@ -1,5 +1,5 @@
 ETHRAW_VERSION:= 1.0.0
-ETHRAW_SITE:= $(TOPDIR)/../buildroot_usr_src/ethraw/src
+ETHRAW_SITE:= $(TOPDIR)/../$(EXTERNAL_PACKAGES_DIR)/ethraw/src
 ETHRAW_SITE_METHOD:=local
 ETHRAW_INSTALL_TARGET:=YES
 

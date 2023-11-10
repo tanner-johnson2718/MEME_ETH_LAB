@@ -33,7 +33,7 @@ cp $BUILDROOT_PKG_TREE_CLEAN_COPY   $BUILDROOT_PKG_TREE_DEST
 echo "menu \"Out of Tree Packages\"" >> $BUILDROOT_PKG_TREE_DEST
 
 # for each dir in the user-apps dir
-cd $USERSPACE_APPS_DIR
+cd $EXTERNAL_PACKAGES_DIR
 for d in * ; do
 
     echo "Importing Package ${d} ..."
@@ -44,37 +44,6 @@ for d in * ; do
         cp "${d}/Config.in"  "../${BUILDROOT_DIR}/package/${d}/Config.in"
     else
         echo "WARNING Cannot find ${d}/Config.in ...  skipping package"
-        continue
-    fi
-
-    if [ -f "${d}/${d}.mk" ]; then
-        cp "${d}/${d}.mk"  "../${BUILDROOT_DIR}/package/${d}/${d}.mk"
-    else
-        echo "WARNING Cannot find ${d}/${d}.mk ... skipping package and deleting progress"
-        rm -rf "../${BUILDROOT_DIR}/package/${d}"
-        continue
-    fi
-
-    # update packages config.in
-    echo "    source package/${d}/Config.in" >> ../$BUILDROOT_PKG_TREE_DEST
-
-    # Update .config
-    echo "BR2_PACKAGE_${d^^}=y" >> ../$BUILDROOT_CONFIG_DEST
-done
-cd ..
-
-# for each dir in the kernel-mod dir
-cd $KMOD_APPS_DIR
-for d in * ; do
-
-    echo "Importing Package (Kernel Mod) ${d} ..."
-
-    # Copy user app meta data to the package folder of the build root system
-    if [ -f "${d}/Config.in" ]; then
-        mkdir "../${BUILDROOT_DIR}/package/${d}"
-        cp "${d}/Config.in"  "../${BUILDROOT_DIR}/package/${d}/Config.in"
-    else
-        echo "WARNING Cannot find ${d}/Config.in ... skipping package"
         continue
     fi
 

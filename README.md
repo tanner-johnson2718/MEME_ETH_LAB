@@ -33,6 +33,11 @@ Some defining goals to get the project going and figure out a starting point are
     * [X] Connect GDB debugger to rpi over UART.
     * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
 
+## Finalized HW Set Up
+
+## SW Flow
+
+
 # Part 2 Linux Software Stack Exploration on RPI
 
 * [ ] [P2.1](./P2.1/) - Use sysfs kernel interface to engage with NIC driver

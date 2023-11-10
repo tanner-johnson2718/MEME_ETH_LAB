@@ -30,8 +30,7 @@ export ROOTFS="${BUILDROOT_DIR}/output/images/rootfs.ext4"
 export KERNEL_DEBUG_IMG="${BUILDROOT_DIR}/output/build/linux-*/vmlinux"
 export SD_IMAGE="${BUILDROOT_DIR}/output/images/sdcard.img"
 
-export USERSPACE_APPS_DIR="buildroot_usr_src"
-export KMOD_APPS_DIR="buildroot_kmod_src" 
+export EXTERNAL_PACKAGES_DIR="extern_packages"
 
 export GDB_CMD="scripts/gdb_cmds.txt"
 export ENV_INIT="true"

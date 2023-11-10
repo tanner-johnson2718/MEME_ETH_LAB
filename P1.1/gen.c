@@ -140,6 +140,7 @@ int main(int argc, char** argv)
         }
     }
 
+    printf("Exiting...");
     free(packet_buffer);
     close(sock);
 }

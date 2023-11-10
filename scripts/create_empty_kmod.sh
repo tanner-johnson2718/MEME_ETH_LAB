@@ -17,7 +17,7 @@ then
     exit
 fi
 
-DIR=$KMOD_APPS_DIR/$1
+DIR=$EXTERNAL_PACKAGES_DIR/$1
 
 mkdir $DIR
 mkdir $DIR/src

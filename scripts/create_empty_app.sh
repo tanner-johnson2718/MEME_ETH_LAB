@@ -20,7 +20,7 @@ then
     exit
 fi
 
-DIR=./$USERSPACE_APPS_DIR/$1
+DIR=./$EXTERNAL_PACKAGES_DIR/$1
 
 mkdir $DIR
 mkdir $DIR/src
@@ -34,7 +34,7 @@ echo "    help" >> $DIR/Config.in
 echo "     Enter short description here" >> $DIR/Config.in
 
 echo "${1^^}_VERSION:= 1.0.0" >> $DIR/$1.mk
-echo "${1^^}_SITE:= \$(TOPDIR)/../${USERSPACE_APPS_DIR}/${1}/src" >> $DIR/$1.mk
+echo "${1^^}_SITE:= \$(TOPDIR)/../${EXTERNAL_PACKAGES_DIR}/${1}/src" >> $DIR/$1.mk
 echo "${1^^}_SITE_METHOD:=local" >> $DIR/$1.mk
 echo "${1^^}_INSTALL_TARGET:=YES" >> $DIR/$1.mk
 echo "" >> $DIR/$1.mk
