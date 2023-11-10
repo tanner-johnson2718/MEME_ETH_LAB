@@ -1,5 +1,3 @@
-source ./scripts/env_init.sh
-
 # Check that env_init is sourced
 if [ -z "$ENV_INIT" ]
 then

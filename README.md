@@ -37,6 +37,17 @@ Some defining goals to get the project going and figure out a starting point are
 
 ## SW Flow
 
+The SW flow is encapsulated by a set of scripts: 
+
+| script | desc | comments|
+| --- | --- | --- |
+| `env_init.sh` | Must be sourced before using any of the scripts | - |
+| `build.sh` | The proper way to call 'make all'. Copies saved configs and external packages and issues a make call | Used when new packages are added or for initial build. Will rebuild SD image based on contents on images dir. Note does issue a recompile of any package. |
+| `rebuild_external_package.sh` | A light rebuild script that rebuilds just a specific external package and rebuilds the rootfs | - |
+| `create_empty_*.sh` | Creates boiler plate for user apps | the .mk file contains the instructions for building, installing, etc. |
+| `flash_sd.sh` | Give it the name of the block device, will unmount any partitions and reflash with current sd image | - |
+
+
 
 # Part 2 Linux Software Stack Exploration on RPI
 
