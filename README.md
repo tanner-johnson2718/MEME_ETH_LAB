@@ -52,6 +52,8 @@ Some defining goals to get the project going and figure out a starting point are
 * [ ] How are Inturrupts generated
 * [ ] Track a Packet from Send to  Recv in Userspaces
 * [ ] IEEE Ethernet Frame spec
+* [ ] Command line args for seeing what driver is associated with what dev
+* [ ] Does sysfs tell us anything about the NIC?
 
 # Part 3 RPI Network Hardware Exploration
 

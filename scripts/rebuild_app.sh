@@ -9,6 +9,7 @@ fi
 
 if [ $# != 1 ]; then
     echo "error usage ./rebuild_app <app>"
+    exit
 fi
 
 if [ $PWD != $BASE_DIR ] ;

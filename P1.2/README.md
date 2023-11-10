@@ -13,6 +13,7 @@ echo 'buildroot' > .gitignore
 wget https://buildroot.org/downloads/buildroot-2023.02.6.tar.xz
 tar xf buildroot-2023.02.6.tar.xz
 mv buildroot-2023.02.6 buildroot
+rm -rf buildroot-2023.02.6.tar.xz
 
 # Move to buildroot and build the basic buildroot config
 cd buildroot
