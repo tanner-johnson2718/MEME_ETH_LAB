@@ -25,9 +25,10 @@ export BUILDROOT_PKG_TREE_CLEAN_COPY="scripts/Config.in"
 export BUILDROOT_CONFIG_DEST="${BUILDROOT_DIR}/.config"
 export BUILDROOT_PKG_TREE_DEST="${BUILDROOT_DIR}/package/Config.in"
 
-export KERNEL_IMG="${BUILDROOT_DIR}/output/images/bzImage"
+export KERNEL_IMG="${BUILDROOT_DIR}/output/images/Image"
 export ROOTFS="${BUILDROOT_DIR}/output/images/rootfs.ext4"
 export KERNEL_DEBUG_IMG="${BUILDROOT_DIR}/output/build/linux-*/vmlinux"
+export SD_IMAGE="${BUILDROOT_DIR}/output/images/sdcard.img"
 
 export USERSPACE_APPS_DIR="buildroot_usr_src"
 export KMOD_APPS_DIR="buildroot_kmod_src" 

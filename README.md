@@ -46,17 +46,30 @@ Some defining goals to get the project going and figure out a starting point are
 
 # Part 2 Linux Software Stack Exploration on RPI
 
-* [ ] What is a socket? Binding?
-* [ ] Address Families?
-* [ ] NIC Ring Buffer
-* [ ] How are Inturrupts generated
-* [ ] Track a Packet from Send to  Recv in Userspaces
-* [ ] IEEE Ethernet Frame spec
-* [ ] Command line args for seeing what driver is associated with what dev
-* [ ] Does sysfs tell us anything about the NIC?
+* [ ] [P2.1](./P2.1/) - Use sysfs, ioctl, and /dev kernel interface to engage with NIC driver
+    * [ ] Sysfs
+    * [ ] IOCTL
+    * [ ] Dev
+* [ ] Use GDB to reverse Engineer a socket() call.
+    * [ ] Find Def of relavent data structures
+    * [ ] Create a call graph
+    * [ ] Annotate importat Files
+* [ ] Use GDB to reverse Engineer a bind() call.
+    * [ ] Find Def of relavent data structures
+    * [ ] Create a call graph
+    * [ ] Annotate importat Files
+* [ ] Set of Useful Command line args:
+    * [ ] what driver is associated with what dev
+    * [ ] IP commands
+* [ ] Reverse Engineer the BCM 2711 genet driver
+* [ ] Track a Packet from Send to Recv in Userspaces
+* [ ] Random Clean Up
+    * [ ] Address Families?
+    * [ ] NIC Ring Buffer
 
 # Part 3 RPI Network Hardware Exploration
 
+* [ ] How are Inturrupts generated
 * [ ] MII and MDIO
 * [ ] Device Tree
 * [ ] NIC on RPI

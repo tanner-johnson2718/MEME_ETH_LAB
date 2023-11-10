@@ -57,7 +57,7 @@ minicom -D /dev/ttyUSB0 -b 115200
 # Rebuilt w/ debug symbols. This requires one to run the following to get to the linux build menu
 make linux-menuconfig
 
-# From here go to the Kernel Hacking->Build w/ Debug info. Select Yes. This opens sub menu to turn on GDB scripts. Select yes. Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. Now just rebuild the kernel and image. Also in the buildroot menuconfig besure to set kernel debugging options found in in build options. Also be make sure a crosss debuger is built in toolchain options. All of these options are saved below when we copy off the buildroot .config into the scripts dir. 
+# From here go to the Kernel Hacking->Build w/ Debug info. Select Yes. This opens sub menu to turn on GDB scripts. Select yes. Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. Now just rebuild the kernel and image. Also in the buildroot menuconfig besure to set kernel debugging options found in in build options. Also be make sure a crosss debuger is built in toolchain options. All of these options are saved below when we copy off the buildroot .config into the scripts dir.
 make all 
 ```
 
@@ -98,6 +98,7 @@ ln -s <non-relative-path>/Makefile ./buildroot_usr_src/ethraw/src/Makfile
 # The exe created can be found in ./buildroot/output/build/<package_name>. But the rootfs shoud now have this exe saved in it, thus copying over the new image requires just reflashing the sd card or one can copy it using a flash drive or somthing. 
 ```
 
+# Attaching Host GDB to RPI Running Kernel
 
 # Resources
 

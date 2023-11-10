@@ -16,6 +16,7 @@ fi
 # delete linux-custom sub directory and output image
 rm -f $KERNEL_IMG
 rm -rf $BUILDROOT_DIR/output/build/linux-*
+rm -rf $SD_IMAGE
 
 # Finally move into the buildroot dir and call make
 cd $BUILDROOT_DIR
