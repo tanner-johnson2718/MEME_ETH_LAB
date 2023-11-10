@@ -40,4 +40,10 @@ This dir appears to enumerate all the devices registered to the kernel based on 
 
 ```
 
+Devices for interfaces like such as i2c, spi, hdmi, dma, ram, etc can all be found here and enumerated using the `/sys/class` dir interface.
+
+A question that comes up from looking at this is how does a driver register its class and export its sysfs device location to this dir.
+
 ## Resources
+
+* https://docs.kernel.org/driver-api/driver-model/binding.html

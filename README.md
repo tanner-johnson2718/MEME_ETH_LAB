@@ -23,7 +23,6 @@ Some defining goals to get the project going and figure out a starting point are
 * Catalog important Linux commands
 * Use and read Official IEEE standards
 
-
 # Part 1 Hardware and Init Software set up
 
 * [X] [P1.1](./P1.1/) - Create a Raw Socket Example Program
@@ -36,10 +35,9 @@ Some defining goals to get the project going and figure out a starting point are
 
 # Part 2 Linux Software Stack Exploration on RPI
 
-* [ ] [P2.1](./P2.1/) - Use sysfs, ioctl, and /dev kernel interface to engage with NIC driver
-    * [ ] Sysfs
-    * [ ] IOCTL
-    * [ ] Dev
+* [ ] [P2.1](./P2.1/) - Use sysfs kernel interface to engage with NIC driver
+* [ ] [P2.2](./P2.2/) Set of Useful Command line args:
+* [ ] Reverse Engineer the BCM 2711 genet driver
 * [ ] Use GDB to reverse Engineer a socket() call.
     * [ ] Find Def of relavent data structures
     * [ ] Create a call graph
@@ -48,10 +46,7 @@ Some defining goals to get the project going and figure out a starting point are
     * [ ] Find Def of relavent data structures
     * [ ] Create a call graph
     * [ ] Annotate importat Files
-* [ ] Set of Useful Command line args:
-    * [ ] what driver is associated with what dev
-    * [ ] IP commands
-* [ ] Reverse Engineer the BCM 2711 genet driver
+
 * [ ] Track a Packet from Send to Recv in Userspaces
 * [ ] Random Clean Up
     * [ ] Address Families?
