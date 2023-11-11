@@ -22,3 +22,4 @@ else
     exit
 fi
 
+./buildroot/output/host/bin/aarch-linux-gdb $KERN
