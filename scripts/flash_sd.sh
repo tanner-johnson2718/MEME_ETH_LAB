@@ -43,5 +43,5 @@ done
 
 read -p 'Flash /dev/$1 (y/n): ' build
 if [ "$build" = "y" ]; then
-    sudo dd if=$SD_IMAGE of=/dev/$1
+    sudo dd if=$SD_IMAGE of=/dev/$1 bs=4M status=progress
 fi

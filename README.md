@@ -35,9 +35,11 @@ Some defining goals to get the project going and figure out a starting point are
 
 ## Finalized HW Set Up
 
+TODO
+
 ## SW Flow
 
-The SW flow is encapsulated by a set of scripts: 
+The SW flow and capabilities are encapsulated by the set of scripts: 
 
 | script | desc | comments|
 | --- | --- | --- |
@@ -46,13 +48,16 @@ The SW flow is encapsulated by a set of scripts:
 | `rebuild_external_package.sh` | A light rebuild script that rebuilds just a specific external package and rebuilds the rootfs | - |
 | `create_empty_*.sh` | Creates boiler plate for user apps | the .mk file contains the instructions for building, installing, etc. |
 | `flash_sd.sh` | Give it the name of the block device, will unmount any partitions and reflash with current sd image | - |
+| `serial_term.sh` | Connect to terminal over uart using minicom | - | 
+| `serial_copy.sh` | Copy a file over serial to device | TODO |
+| `serial_gdb.sh`  | Connect arch specific gdb to device over serial | TODO | 
 
-
+**Note:** to rebuild a specific package delete its build dir in output/build.  Completely remove the output dir to "nuke" the buildroot system. This will keep the package source downloaded but will force a rebuilt of everything including host tools.  
 
 # Part 2 Linux Software Stack Exploration on RPI
 
 * [ ] [P2.1](./P2.1/) - Use sysfs kernel interface to engage with NIC driver
-* [ ] [P2.2](./P2.2/)Use GDB to reverse Engineer a socket() call.
+* [ ] [P2.2](./P2.2/) - Use GDB to reverse Engineer a socket() call.
     * [ ] Find Def of relavent data structures
     * [ ] Create a call graph
     * [ ] Annotate importat Files

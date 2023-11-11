@@ -58,16 +58,16 @@ minicom -D /dev/ttyUSB0 -b 115200
 #    * Kernel Hacking -> Compiler Time Checks -> Build w/ Debug info 
 #    * Opens up new option ... -> Provide GDB Scripts. Select yes. 
 #    * Kernel Hacking -> Generic Kernel Debugging Instrumets -> KGDB
-#    * ... KGDB -> KGDB over serail.
+#    * ... KGDB -> KGDB over serial.
 # Save and use default name and location. This populates a .config at buildroot/output/build/linux-custom/.config. 
 make linux-menuconfig
 cp buildroot/output/build/linux-custom/.config ./scripts/.config
 
 # Also in the buildroot menuconfig besure to set kernel debugging options found in in build options. Also be make sure a crosss debuger is built in toolchain options. All of these options are saved below when we copy off the buildroot .config into the scripts dir.
-#   * Tool Chain -> Build Cross GDB for host
-#   * Build Options -> Build packages with debug symbols
-#   * Build Options -> Build packages wit runtime debug symbols
-#   * Build Options -> Strip target binaries
+#   * Tool Chain -> Build Cross GDB for host                     (Y) 
+#   * Build Options -> Build packages with debug symbols         (N)
+#   * Build Options -> Build packages wit runtime debug symbols  (N)
+#   * Build Options -> Strip target binaries                     (Y)
 #   * Kernel -> set .config path to "$(TOPDIR)/../scripts/.config"
 make menuconfig
 cp ./buildroot/.config ./scripts/buildroot.config
@@ -127,8 +127,6 @@ cd buildroot
 (gdb) set serial baud 115200
 (gdb) target remote /dev/ttyUSB0
 ```
-
-# Follow Up Questions and Analysis
 
 
 # Resources
