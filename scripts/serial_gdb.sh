@@ -22,4 +22,4 @@ else
     exit
 fi
 
-./buildroot/output/host/bin/aarch-linux-gdb $KERN
+./buildroot/output/host/bin/aarch64-linux-gdb -iex "set auto-load safe-path ./buildroot/output/build/linux-custom/" $KERNEL_DEBUG_IMG -x $BASE_DIR/scripts/gdb_cmds.txt
