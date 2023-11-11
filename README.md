@@ -39,7 +39,7 @@ TODO
 
 ## SW Flow
 
-The SW flow and capabilities are encapsulated by the set of scripts: 
+The SW flow and capabilities derived in Part 1 are encapsulated by the set of scripts: 
 
 | script | desc | comments|
 | --- | --- | --- |
@@ -48,9 +48,10 @@ The SW flow and capabilities are encapsulated by the set of scripts:
 | `rebuild_external_package.sh` | A light rebuild script that rebuilds just a specific external package and rebuilds the rootfs | - |
 | `create_empty_*.sh` | Creates boiler plate for user apps | the .mk file contains the instructions for building, installing, etc. |
 | `flash_sd.sh` | Give it the name of the block device, will unmount any partitions and reflash with current sd image | - |
-| `serial_term.sh` | Connect to terminal over uart using minicom | - | 
+| `serial_term.sh` | Connect to terminal over uart using minicom | After running once, can just use `minicom` | 
 | `serial_copy.sh` | Copy a file over serial to device | TODO |
-| `serial_gdb.sh`  | Connect arch specific gdb to device over serial | TODO | 
+| `serial_gdb.sh`  | Connect arch specific gdb to device over serial | Besure the device is on, logged into, in a terminal and not already in kdb |
+| `serial_force_reboot.sh` | Will reboot device if it is in a terminal or in kdb | Will not work if waiting for log in |  
 
 **Note:** to rebuild a specific package delete its build dir in output/build.  Completely remove the output dir to "nuke" the buildroot system. This will keep the package source downloaded but will force a rebuilt of everything including host tools.  
 
