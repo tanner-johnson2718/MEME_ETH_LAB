@@ -33,10 +33,6 @@ Some defining goals to get the project going and figure out a starting point are
     * [X] Connect GDB debugger to rpi over UART.
     * [ ] Send and Recv a Raw Eth Frame from RPI to Laptop
 
-## Finalized HW Set Up
-
-TODO
-
 ## SW Flow
 
 The SW flow and capabilities derived in Part 1 are encapsulated by the set of scripts: 
