@@ -128,6 +128,27 @@ cd buildroot
 (gdb) target remote /dev/ttyUSB0
 ```
 
+# Sending and Recving using lrzsz
+
+```bash
+# Make sure lrzsz is installed on the host:
+sudo apt-get install lrzsz
+
+# Use menu config in buildroot to build the lrzsz package into the image. It is under packages->networking. Save off the config, build and reflash the SD
+cd buildroot
+make menuconfig
+cp .config ../scripts/buildroot.config
+cd ..
+./scripts/build.sh
+./scripts/flash_sd.sh
+
+# Now on the device we can run the following to recv
+rz > /dev/ttyAMA0 < /dev/ttyAMA0
+
+# And on the host run the following to send a file
+sz /path/to/file > /dev/ttyUSB0 < /dev/ttyUSB0
+```
+
 
 # Resources
 

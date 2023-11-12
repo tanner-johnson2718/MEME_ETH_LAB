@@ -49,7 +49,7 @@ The SW flow and capabilities derived in Part 1 are encapsulated by the set of sc
 | `create_empty_*.sh` | Creates boiler plate for user apps | the .mk file contains the instructions for building, installing, etc. |
 | `flash_sd.sh` | Give it the name of the block device, will unmount any partitions and reflash with current sd image | - |
 | `serial_term.sh` | Connect to terminal over uart using minicom | After running once, can just use `minicom` | 
-| `serial_copy.sh` | Copy a file over serial to device | TODO |
+| `serial_push.sh` | Copy a file over serial to device | - |
 | `serial_gdb.sh`  | Connect arch specific gdb to device over serial | Besure the device is on, logged into, in a terminal and not already in kdb |
 | `serial_force_reboot.sh` | Will reboot device if it is in a terminal or in kdb | Will not work if waiting for log in |  
 
