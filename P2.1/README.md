@@ -9,7 +9,7 @@
     * https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-net
 
 | Entry | Value | Desc |
-| --- | --- |
+| --- | --- | --- |
 | addr_assign_type | 0 | Indicates the address assignment type. 0 =  permanant address. 1 = randomly generated. 2 = stolen from another device. 3 = set using dev_set_mac_addr |
 | addr_len | 6 | Physical layer address len |
 | address | d8:3a:dd:49:fc:c2 | Physical Layer addr |
