@@ -1,6 +1,4 @@
-# P2.1 Userspace and Command Line tool Exploration
-
-# Sysfs exploration
+# Using Sysfs to play with RPI Eth Devices
 
 ## Sysfs entry of `/sys/class/net/eth0` (Interface)
 
@@ -91,7 +89,35 @@ A question that comes up from looking at this is how does a driver register its 
 
 Another interesting look at the sysfs interface is through the bus dir. It enumerates every bus on the system and each bus contains a driver's and device's dir containing syminks to the respective driver and device sysfs entry. [This](https://www.kernel.org/doc/html/latest/driver-api/driver-model/bus.html) kernel doc entry describes this layout. This dir provides a flat layout of the device tree, grouping by bus and this is another good candiate to run the `tree` command on to get an idea of all the devices on a system. Finally we can also draw the conclusion that the `/sys/devices` dir is the "main" dir. All links to devices point into this dir.
 
+## `/sys/fs`
+
+This subdir is rather straight forward. For each kernel supported fs, there is a dir in `/sys/fs`. In each fs type there are sub dirs for the partitions containting file systems of that type, which in turn contain some stats on the files system that dir represents.
+
+## `/sys/module`
+
+Contains a dir for every module loaded on the system. Each module has a parameters dir with a list a parameters one can change. For example "kgdboc" (Kernel GDB over console) has a single parametere `/sys/module/kgdboc/parameters/kgdboc` which contains the serial console that facilitates kgdboc.
+
+## `/sys/kernel`
+
+The kernel dir really only contains two interesting subdirs:
+
+* irq - 
+* slab -
+
+## `/sys/firmware`
+
+## `/sys/power`
+
+## `/sys/block`
+
+## `/sys/dev`
+
 ## `/sys/devices` 
+
+The devices dir is a filesystem representation of the device treemodule/ contains parameter values and state information for all loaded system modules, for both builtin and loadable modules.
+
+
+
 
 # Resources
 
