@@ -8,3 +8,18 @@ if ! test -d /sys/class/net/$1/statistics; then
     exit
 fi
 
+PWD=$(pwd)
+cd /sys/class/net/$1/statistics/
+
+for d in * ; do
+
+    if ! test -f $d; then
+        continue
+    fi
+
+    v=$(cat $d)
+    printf "%-25s %s\n" "$d" "$v" 
+
+done
+
+cd $PWD
