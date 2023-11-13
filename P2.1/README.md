@@ -43,8 +43,6 @@
 | type | 1 | protocol type. [include/uapi/linux/if_arp.h](../buildroot/output/build/linux-custom/include/uapi/linux/if_arp.h) |
 | uevent | INTERFACE=eth0 IFINDEX=2 | ?? |
 
-
-
 # Sysfs Appendix
 
 The past few MEME projects made heavy use of the sysfs interface. The goal here is to use the above playing around with sysfs to generate target questions that show how sysfs works,  how to use it, how its organized, etc. The first thing we notice when we `cd /sys` is we the top dir layout of the interface.

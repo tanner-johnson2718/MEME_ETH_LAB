@@ -22,7 +22,6 @@
 #include <sys/ioctl.h>
 #include <time.h>
 
-
 const int num_packets_to_send = 10;
 const int delay_ms = 1000;    
 const int sec_mod_factor = 1000;
@@ -30,8 +29,8 @@ const int nsec_div_factor = 1000*1000;
 
 const int packet_size = 128;       // includes header, not crc though
 const char payload_byte = 0xA5;    // byte repeated to fill packet
-const unsigned char mac_src[6] = {0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c};
-const unsigned char mac_dst[6] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+const unsigned char mac_src[6];
+const unsigned char mac_dst[6];
 const unsigned char tag[2] = {0x69, 0x69};
 
 char interface_name[16];
@@ -44,13 +43,14 @@ int main(int argc, char** argv)
     struct ifreq interface_index = {0};
     struct timespec time = {0}, time_now = {0};
 
-    // process comannd line args. Expects ./<prog> <if_name>
-    if(argc != 2)
+    // process comannd line args. Expects ./<prog> <if_name> <mac_dst> <mac_src>
+    if(argc != 4)
     {
         printf("ERROR usage ./%s <if_name>\n", argv[0]);
         exit(1);
     }
 
+    // Parse if_name
     if(strlen(argv[1]) > 15)
     {
         printf("ERROR interface name to long\n");
@@ -65,6 +65,14 @@ int main(int argc, char** argv)
     }
 
     interface_name[i] = (char) 0;
+
+    // Parse 
+    if(strlen(argv[2]) != 17)
+    {
+        printf("ERROR, mac_addr must be of xx:xx:xx:xx:xx:xx\n");
+        exit(1);
+    }
+    sscanf();
 
     time.tv_nsec = (delay_ms % 1000)*1000*1000;
     time.tv_sec = delay_ms / 1000;
@@ -140,7 +148,7 @@ int main(int argc, char** argv)
         }
     }
 
-    printf("Exiting...");
+    printf("Exiting...\n");
     free(packet_buffer);
     close(sock);
 }
