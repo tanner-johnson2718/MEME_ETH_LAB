@@ -22,11 +22,11 @@ Some defining goals to get the project going and figure out a starting point are
     <li>Initial handshake and negotiation</li>
     </td>
     <td>
-    * Neighbor Discovery (0xFF)
-    * Ring Buffer on NIC
-    * How do frames make their way to user-space
-    * Catalog important Linux commands
-    * Use and read Official IEEE standards
+    <li>Neighbor Discovery (0xFF)</li>
+    <li>Ring Buffer on NIC</li>
+    <li>How do frames make their way to user-space</li>
+    <li>Catalog important Linux commands</li>
+    <li>Use and read Official IEEE standards</li>
     </td>
  </tr>
 </table>
