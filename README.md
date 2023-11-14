@@ -44,24 +44,7 @@ Some defining goals to get the project going and figure out a starting point are
         * [X] Develop a means of cross compiling
     * [X] Connect GDB debugger to rpi over UART.
     * [X] Send and Recv a Raw Eth Frame from RPI to Laptop
-
-## SW Flow
-
-The SW flow and capabilities derived in Part 1 are encapsulated by the set of scripts: 
-
-| script | desc | comments|
-| --- | --- | --- |
-| `env_init.sh` | Must be sourced before using any of the scripts | - |
-| `build.sh` | The proper way to call 'make all'. Copies saved configs and external packages and issues a make call | Used when new packages are added or for initial build. Will rebuild SD image based on contents on images dir. Note does issue a recompile of any package. |
-| `rebuild_external_package.sh` | A light rebuild script that rebuilds just a specific external package and rebuilds the rootfs | - |
-| `create_empty_*.sh` | Creates boiler plate for user apps | the .mk file contains the instructions for building, installing, etc. |
-| `flash_sd.sh` | Give it the name of the block device, will unmount any partitions and reflash with current sd image | - |
-| `serial_term.sh` | Connect to terminal over uart using minicom | After running once, can just use `minicom` | 
-| `serial_push.sh` | Copy a file over serial to device | - |
-| `serial_gdb.sh`  | Connect arch specific gdb to device over serial | Besure the device is on, logged into, in a terminal and not already in kdb |
-| `serial_force_reboot.sh` | Will reboot device if it is in a terminal or in kdb | Will not work if waiting for log in |  
-
-**Note:** to rebuild a specific package delete its build dir in output/build.  Completely remove the output dir to "nuke" the buildroot system. This will keep the package source downloaded but will force a rebuilt of everything including host tools.  
+    * [X] [SW Flow and How to use scripts](./P1.2/README.md#sw-flow)
 
 # Part 2 Linux Software Stack Exploration on RPI
 
