@@ -12,28 +12,17 @@ In this installment of the MEME series we take more of a lab homework assignment
 
 Some defining goals to get the project going and figure out a starting point are the following:
 
-<table>
- <tr>
-    <td>
-    <li>Understand MAC and PHY Hardware</li>
-    <li>Understand Speed Negotiation</li>
-    <li>Layer 1 and 2 Protocols</li>
-    <li>MDIO and MII</li>
-    <li>Device Trees</li>
-    <li>Initial handshake and negotiation</li>
-    </td>
-    <td>
-    <li>Neighbor Discovery (0xFF)</li>
-    <li>Ring Buffer on NIC</li>
-    <li>How do frames make their way to user-space</li>
-    <li>Catalog important Linux commands</li>
-    <li>Use and read Official IEEE standards</li>
-    </td>
- </tr>
-</table>
-
-
-
+* Understand MAC and PHY Hardware
+* Understand Speed Negotiation
+* Layer 1 and 2 Protocols
+* MDIO and MII
+* Device Trees
+* Initial handshake and negotiation
+* Neighbor Discovery (0xFF)
+* Ring Buffer on NIC
+* How do frames make their way to user-space
+* Catalog important Linux commands
+* Use and read Official IEEE standards
 
 # Part 1 Hardware and Init Software set up
 
