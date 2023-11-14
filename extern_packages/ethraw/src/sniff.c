@@ -52,7 +52,6 @@
 #include "libEth.h"
 
 const int max_ethframe_size = 1522;
-const int raw_hex_dump_num_bytes_per_block = 8;
 
 const int mac_len = 6;
 const int eth_tag_len = 2;
@@ -76,7 +75,7 @@ void raw_hex_dump(int len, unsigned char* buff)
     for(i = 0; i < len; ++i)
     {
 
-        if(i % raw_hex_dump_num_bytes_per_block != 0)
+        if(i % 8 != 0)
         {
             printf(" %02x", buff[i]);
             continue;

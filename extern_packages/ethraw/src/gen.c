@@ -11,7 +11,7 @@ const int delay_ms = 1000;
 const int sec_mod_factor = 1000;
 const int nsec_div_factor = 1000*1000;     
 
-const int packet_size = 128;       // includes header, not crc though
+const int packet_size = 1515;       // includes header, not crc though
 const char payload_byte = 0xA5;    // byte repeated to fill packet
 const unsigned char tag[2] = {0x69, 0x69};
 
@@ -88,10 +88,16 @@ int main(int argc, char** argv)
     for(i = 0 ; i < num_packets_to_send; ++i)
     {
         num_sent = send(sock, packet_buffer, packet_size, 0);
-        clock_gettime(CLOCK_REALTIME, &time_now);
-
-        printf("Num Bytes Sent = %d at %ld.%ld\n", num_sent, time_now.tv_sec % sec_mod_factor, time_now.tv_nsec / nsec_div_factor);
-
+        if(num_sent < 0)
+        {
+            perror("Send Failed");
+        }
+        else
+        {
+            clock_gettime(CLOCK_REALTIME, &time_now);
+            printf("Num Bytes Sent = %d at %ld.%ld\n", num_sent, time_now.tv_sec % sec_mod_factor, time_now.tv_nsec / nsec_div_factor);
+        }
+        
         ret = nanosleep(&time_sleep, NULL);
         if (ret < 0)
         {
