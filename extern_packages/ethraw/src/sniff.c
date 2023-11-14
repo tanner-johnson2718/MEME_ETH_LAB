@@ -8,7 +8,7 @@
 // | ---------------------------------------------------------------------------
 // | 
 // | socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-// | recv(sock, buff, max_ethframe_size, 0);
+// | recv();
 // | bind()
 // | ioctl() -> to get interface index off socket
 // | send()
@@ -51,85 +51,36 @@
 
 #include "libEth.h"
 
-const int max_ethframe_size = 1522;
-
-const int mac_len = 6;
-const int eth_tag_len = 2;
-const int crc_len = 4;
-const int mac_dest_off = 0;
-const int mac_src_off = 6;
-const int eth_tag_offset = 12;
-const int payload_offset = 14;
-
 int keep_looping = 1;
-
-char interface_name[16];
-
-const int print_payload = 0;
-const int sec_mod_factor = 1000;
-const int nsec_div_factor = 1000*1000;     
-
-void raw_hex_dump(int len, unsigned char* buff)
-{
-    int i;
-    for(i = 0; i < len; ++i)
-    {
-
-        if(i % 8 != 0)
-        {
-            printf(" %02x", buff[i]);
-            continue;
-        }
-
-        if(i != 0)
-        {
-            printf("\n");
-        }
-
-        printf("0x%02x  |  %02x", i, buff[i]);
-    }
-
-    printf("\n");
-}
 
 void frame_pretty_print(int len, unsigned char* buff, struct timespec time_now)
 {
-    int i, off = mac_dest_off;
+    int i, off = MAC_DST_OFF;
     
     printf("------------------------------------------------------------\n");
 
-    printf("TIME   = %ld.%ld\n", time_now.tv_sec % sec_mod_factor, time_now.tv_nsec / nsec_div_factor);
+    printf("TIME   = %ld.%ld\n", time_now.tv_sec % SEC_MOD_FACTOR, time_now.tv_nsec / NSEC_DIV_FACTOR);
 
     printf("PAC LEN = %d\n", len);
 
     printf("MAC DST = ");
-    for(i = 0; i < mac_len; ++i)
+    for(i = 0; i < MAC_LEN; ++i)
     {
         printf("%02x ", buff[off + i]);
     }
     printf("\n");
 
-    off = mac_src_off;
+    off = MAC_SRC_OFF;
     printf("MAC SRC = ");
-    for(i = 0; i < mac_len; ++i)
+    for(i = 0; i < MAC_LEN; ++i)
     {
         printf("%02x ", buff[off + i]);
     }
     printf("\n");
 
-    off = eth_tag_offset;
+    off = TAG_OFF;
     printf("ETH TAG = %02x %02x", buff[off], buff[off+1]);
     printf("\n");
-
-    off = len - crc_len;
-    printf("CRC     = %02x %02x %02x %02x\n", buff[off], buff[off+1], buff[off+2], buff[off+3]);
-
-    if(print_payload)
-    {
-        off = payload_offset;
-        printf("PAYLOAD = \n\n");
-        raw_hex_dump(len - off - crc_len, buff + off);
-    }
     
 
     printf("------------------------------------------------------------\n\n");
@@ -144,12 +95,10 @@ void sig_int_handler(int num)
 int main(int argc, char** argv)
 {
     struct sigaction new_action;
-    int ret, sock, i;
-    struct sockaddr_ll inner_sockaddr;
-    struct ifreq interface_index;
-    ssize_t num_read = 0;
+    int ret, sock, i, num_read = 0;
     unsigned char* buff = NULL;
     struct timespec time_now = {0};
+    int if_index = -1;
 
     // process comannd line args. Expects ./<prog> <if_name>
     if(argc != 2)
@@ -164,17 +113,8 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    i = 0;
-    while(argv[1][i] != (char) 0)
-    {
-        interface_name[i] = argv[1][i];
-        ++i;
-    }
-
-    interface_name[i] = (char) 0;
-
     // Allocate packet buffer
-    buff = malloc(max_ethframe_size);
+    buff = malloc(MAX_FRAME_SIZE);
     if(buff == NULL)
     {
         perror("malloc failed");
@@ -202,30 +142,23 @@ int main(int argc, char** argv)
     }
 
     // Bind to interface
-    strncpy(&interface_index.ifr_name, interface_name, strlen(interface_name));
-    ret = ioctl(sock, SIOCGIFINDEX, &interface_index);
-    if(ret < 0)
+    if_index = parse_if_index(argv[1], sock);
+    if(if_index < 0)
     {
-        perror("ioctl");
+        printf("ERROR - failed to parse interface index\n");
         exit(1);
     }
+    printf("Index of %s = %d\n", argv[1], if_index);
 
-    inner_sockaddr.sll_family = AF_PACKET;
-    inner_sockaddr.sll_protocol = htons(ETH_P_ALL);
-    inner_sockaddr.sll_ifindex = interface_index.ifr_ifindex;
-
-    printf("Index of %s = %d\n", interface_name, interface_index.ifr_ifindex);
-
-    ret = bind(sock, (struct sockaddr*) &inner_sockaddr, sizeof(struct sockaddr_ll));
-    if(ret < 0)
+    if(libEth_bind(sock, if_index) < 0)
     {
-        perror("bind");
+        printf("ERROR - failed to bind\n");
         exit(1);
     }
 
     while(keep_looping)
     {
-        num_read = recv(sock, buff, max_ethframe_size, 0);
+        num_read = recv(sock, buff, MAX_FRAME_SIZE, 0);
         clock_gettime(CLOCK_REALTIME, &time_now);
         if(!keep_looping)
         {
@@ -238,11 +171,6 @@ int main(int argc, char** argv)
         {
             perror("recv failed");
             exit(1);
-        }
-
-        if(num_read == max_ethframe_size)
-        {
-            printf("WARNING, recv packet of max length\n");
         }
 
         frame_pretty_print(num_read, buff, time_now);

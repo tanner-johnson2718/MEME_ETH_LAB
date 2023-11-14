@@ -4,30 +4,26 @@
 
 // sniff.c has some better doc and this file is meant to be rather basic.
 
-#include "libEth.h"
+#include "libEth.h" 
 
-const int num_packets_to_send = 10;
-const int delay_ms = 1000;    
-const int sec_mod_factor = 1000;
-const int nsec_div_factor = 1000*1000;     
 
-const int packet_size = 1515;       // includes header, not crc though
-const char payload_byte = 0xA5;    // byte repeated to fill packet
-const unsigned char tag[2] = {0x69, 0x69};
 
 int main(int argc, char** argv)
 {
     unsigned char* packet_buffer = NULL;
     int sock = 0, ret = 0, num_sent = 0, i = 0;
-    struct timespec time_sleep = {delay_ms / 1000, (delay_ms % 1000)*1000*1000};
+    struct timespec time_sleep = {SEND_DELAY_MS / 1000, (SEND_DELAY_MS % 1000)*1000*1000};
     struct timespec time_now = {0};
 
+    // Parsed args
     unsigned char mac_src[6];
     unsigned char mac_dst[6];
     int if_index = -1;
+    int packet_size;
+    unsigned char tag[2];
 
-    // Expects input args ./<prog> <if_name> <mac_dst> <mac_src>
-    if(argc != 4)
+    // Expects input args ./<prog> <if_name> <mac_dst> <mac_src> <tag> <pack_size>
+    if(argc != 6)
     {
         printf("ERROR usage ./%s <if_name>\n", argv[0]);
         exit(1);
@@ -58,7 +54,21 @@ int main(int argc, char** argv)
     // Parse mac_src
     if(parse_mac(argv[3], mac_src) < 0)
     {
-        printf("ERROR -  mac_src must be of form xx:xx:xx:xx:xx:xx\n");
+        printf("ERROR - mac_src must be of form xx:xx:xx:xx:xx:xx\n");
+        exit(1);
+    }
+
+    // Parse Tag
+    if(parse_tag(argv[4], tag) < 0)
+    {
+        printf("ERROR - tag must be of form 0xHHHH\n");
+        exit(1);
+    }
+
+    // Parse Packet size
+    if((packet_size = atoi(argv[5])) < 0)
+    {
+        printf("ERROR - Packet Size must be positive int\n");
         exit(1);
     }
 
@@ -70,7 +80,7 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-    ret = pack_frame(packet_buffer, packet_size, mac_src, mac_dst, (unsigned char*) tag, payload_byte);
+    ret = pack_frame(packet_buffer, packet_size, mac_src, mac_dst, (unsigned char*) tag);
     if(ret < 0)
     {
         printf("Error Packet size not in [64,1518]\n");
@@ -85,7 +95,7 @@ int main(int argc, char** argv)
     }
 
     // Transmit Data
-    for(i = 0 ; i < num_packets_to_send; ++i)
+    for(i = 0 ; i < NUM_PACKETS_TO_SEND; ++i)
     {
         num_sent = send(sock, packet_buffer, packet_size, 0);
         if(num_sent < 0)
@@ -95,7 +105,7 @@ int main(int argc, char** argv)
         else
         {
             clock_gettime(CLOCK_REALTIME, &time_now);
-            printf("Num Bytes Sent = %d at %ld.%ld\n", num_sent, time_now.tv_sec % sec_mod_factor, time_now.tv_nsec / nsec_div_factor);
+            printf("Num Bytes Sent = %d at %ld.%ld\n", num_sent, time_now.tv_sec % SEC_MOD_FACTOR, time_now.tv_nsec / NSEC_DIV_FACTOR);
         }
         
         ret = nanosleep(&time_sleep, NULL);

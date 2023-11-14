@@ -41,10 +41,25 @@ int parse_mac(char* str, unsigned char* mac)
     return 0;
 }
 
+int parse_tag(char* str, unsigned char* tag)
+{
+    if(strlen(str) != 6)
+    {
+        return -1;
+    }
+
+    int ret = sscanf(str, "0x%02hhx%02hhx", tag, tag + 1);
+    if(ret != 2)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
 int pack_frame(unsigned char* packet_buffer, int len, unsigned char* mac_src, 
                                                unsigned char* mac_dst,
-                                               unsigned char* tag,
-                                               unsigned char payload_byte)
+                                               unsigned char* tag)
 {
     int i;
     if(len < 64 || len > 1518)
@@ -55,7 +70,7 @@ int pack_frame(unsigned char* packet_buffer, int len, unsigned char* mac_src,
     // Populate packet with payload byte
     for(i = 0; i < len; ++i)
     {
-        packet_buffer[i] = payload_byte;
+        packet_buffer[i] = PAYLOAD_BYTE;
     }
 
     // Fill in eth headers
@@ -86,4 +101,27 @@ int libEth_bind(int sock, int if_index)
     }
 
     return 0;
+}
+
+void raw_hex_dump(int len, unsigned char* buff)
+{
+    int i;
+    for(i = 0; i < len; ++i)
+    {
+
+        if(i % 8 != 0)
+        {
+            printf(" %02x", buff[i]);
+            continue;
+        }
+
+        if(i != 0)
+        {
+            printf("\n");
+        }
+
+        printf("0x%02x  |  %02x", i, buff[i]);
+    }
+
+    printf("\n");
 }
