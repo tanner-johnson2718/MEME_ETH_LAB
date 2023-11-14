@@ -14,12 +14,12 @@ Some defining goals to get the project going and figure out a starting point are
 <table border="0">
  <tr>
     <td>
-    * Understand MAC and PHY Hardware
-    * Understand Speed Negotiation
-    * Layer 1 and 2 Protocols
-    * MDIO and MII
-    * Device Trees
-    * Initial handshake and negotiation
+    <li>Understand MAC and PHY Hardware</li>
+    <li>Understand Speed Negotiation</li>
+    <li>Layer 1 and 2 Protocols</li>
+    <li>MDIO and MII</li>
+    <li>Device Trees</li>
+    <li>Initial handshake and negotiation</li>
     </td>
     <td>
     * Neighbor Discovery (0xFF)
