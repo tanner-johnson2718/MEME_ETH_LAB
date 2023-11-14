@@ -173,8 +173,7 @@ int main(int argc, char** argv)
             exit(1);
         }
 
-        frame_pretty_print(num_read, buff, time_now);
-        
+        frame_pretty_print(num_read, buff, time_now);   
     }
 
     printf("Freeing Up Prog resources\n");

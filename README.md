@@ -39,7 +39,7 @@ Some defining goals to get the project going and figure out a starting point are
 
 * [ ] [P2.1](./P2.1/) - Use sysfs kernel interface to play with NIC interface
 * [ ] [P2.2](./P2.2/) - Play with Raw Sock code
-    * [ ] Refactor code
+    * [X] Refactor code
 * [ ] [P2.3](./P2.3/) - Use GDB to reverse Engineer a network system calls.
     * [ ] Find Def of relavent data structures
     * [ ] Create a call graph
