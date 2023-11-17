@@ -114,6 +114,65 @@ The kernel dir really only contains two interesting subdirs:
 
 The devices dir is a filesystem representation of the device treemodule/ contains parameter values and state information for all loaded system modules, for both builtin and loadable modules.
 
+# Using Sysfs
+
+# Pi PHY and MAC driver
+
+```bash
+# Find the find phydriver. We use the sysfs interface to find the net interface
+# which 
+cd /sys/class/net/eth0
+cd phydev
+ls -la 
+cat phy_id
+cd ..
+cd driver
+ls -la
+```
+
+```
+# ls -la
+total 0
+drwxr-xr-x    4 root     root             0 Jan  1 01:39 .
+drwxr-xr-x    5 root     root             0 Jan  1 01:39 ..
+lrwxrwxrwx    1 root     root             0 Jan  1 01:39 attached_dev -> ../../../../net/eth0
+lrwxrwxrwx    1 root     root             0 Jan  1 01:39 driver -> ../../../../../../../../bus/mdio_bus/drivers/Broadcom BCM54213PE
+lrwxrwxrwx    1 root     root             0 Jan  1 01:39 of_node -> ../../../../../../../../firmware/devicetree/base/scb/ethernet@7d580000/mdio@e14/ethernet-phy@1
+-r--r--r--    1 root     root          4096 Jan  1 01:39 phy_has_fixups
+-r--r--r--    1 root     root          4096 Jan  1 01:39 phy_id
+-r--r--r--    1 root     root          4096 Jan  1 01:39 phy_interface
+drwxr-xr-x    2 root     root             0 Jan  1 01:39 power
+drwxr-xr-x    2 root     root             0 Jan  1 01:39 statistics
+lrwxrwxrwx    1 root     root             0 Jan  1 01:39 subsystem -> ../../../../../../../../bus/mdio_bus
+-rw-r--r--    1 root     root          4096 Jan  1 01:39 uevent
+# cat phy_id
+0x600d84a2
+```
+
+* The pi phy is BCM54213PE
+* The of_node symlink points to the entry in the device tree
+* Have a symlink for the network device interface eth0
+* scb = serial control bus
+* Info on MDIO bys
+
+```
+#  ls -la
+total 0
+drwxr-xr-x    5 root     root             0 Jan  1 00:00 .
+drwxr-xr-x   10 root     root             0 Jan  1 00:00 ..
+lrwxrwxrwx    1 root     root             0 Jan  1 01:46 driver -> ../../../../bus/platform/drivers/bcmgenet
+-rw-r--r--    1 root     root          4096 Jan  1 01:46 driver_override
+-r--r--r--    1 root     root          4096 Jan  1 01:46 modalias
+drwxr-xr-x    3 root     root             0 Jan  1 00:00 net
+lrwxrwxrwx    1 root     root             0 Jan  1 01:46 of_node -> ../../../../firmware/devicetree/base/scb/ethernet@7d580000
+drwxr-xr-x    2 root     root             0 Jan  1 01:46 power
+lrwxrwxrwx    1 root     root             0 Jan  1 01:46 subsystem -> ../../../../bus/platform
+-rw-r--r--    1 root     root          4096 Jan  1 01:46 uevent
+drwxr-xr-x    4 root     root             0 Jan  1 01:39 unimac-mdio.-19
+
+```
+
+* Pi MAC    
 
 
 

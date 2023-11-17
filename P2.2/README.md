@@ -37,17 +37,7 @@ We set up the laptop to send and the pi to recv and noticed the following:
 
 # Interface stats
 
-# Pi PHY and MAC driver
 
-```bash
-# Find the find phydriver. We use the sysfs interface to find the net interface
-# which 
-cd /sys/class/net/eth0
-cd phydev
-ls -la 
-cat phy_id
-
-```
 
 
 # Wireshark vs Our Sniffer
