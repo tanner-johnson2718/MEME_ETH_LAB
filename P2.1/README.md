@@ -156,28 +156,44 @@ This subdir is rather straight forward. For each kernel supported fs, there is a
 
 Contains a dir for every module loaded on the system. Each module has a parameters dir with a list a parameters one can change. For example "kgdboc" (Kernel GDB over console) has a single parametere `/sys/module/kgdboc/parameters/kgdboc` which contains the serial console that facilitates kgdboc.
 
-## `/sys/kernel`
-
-The kernel dir really only contains two interesting subdirs:
-
-* irq - 
-* slab -
-
 ## `/sys/firmware`
+
+Contains a binary form of the device tree and file heiarchy containing its expanded contents
 
 ## `/sys/power`
 
+Unclear
+
 ## `/sys/block`
 
+Links into the devices dir for all the block devices.
+
 ## `/sys/dev`
+
+Links into the devices dir for all the block and char devices.
 
 ## `/sys/devices` 
 
 The devices dir is a filesystem representation of the device treemodule/ contains parameter values and state information for all loaded system modules, for both builtin and loadable modules.
 
-# Using Sysfs To Understand the HW and SW on a PI
+## `/sys/kernel`
 
-## Finding HW and driver using Sysfs
+The kernel dir really only contains two interesting subdirs:
+
+### [irq](https://www.kernel.org/doc/html/v4.18/core-api/genericirq.html)
+| IRQ Entry | Value | Comments | 
+| --- | --- | --- |
+| actions | IRI | - |
+| chipname | GICv2 | ARM Generic Interrupt Controller | 
+| hwirq | 0 | HW IRQ number |
+| name | "" | - |
+| per_cpu_count | 69,420,312,123 | Per CPU num times this irq has been raised | 
+| type | Edge | trigger type
+| wakeup | disabled | Boot up PC? |
+
+### slab
+
+
 
 
 
@@ -188,3 +204,4 @@ The devices dir is a filesystem representation of the device treemodule/ contain
     * https://docs.kernel.org/driver-api/driver-model/binding.html
     * https://www.kernel.org/doc/html/latest/driver-api/driver-model/bus.html
 * https://www.kernel.org/doc/html/next/filesystems/sysfs.html
+* https://www.kernel.org/doc/html/v4.18/core-api/genericirq.html
