@@ -25,6 +25,7 @@ export BUILDROOT_PKG_TREE_CLEAN_COPY="scripts/Config.in"
 export BUILDROOT_CONFIG_DEST="${BUILDROOT_DIR}/.config"
 export BUILDROOT_PKG_TREE_DEST="${BUILDROOT_DIR}/package/Config.in"
 
+export LINDIR="${BUILDROOT_DIR}/output/build/linux-custom"
 export KERNEL_IMG="${BUILDROOT_DIR}/output/images/Image"
 export ROOTFS="${BUILDROOT_DIR}/output/images/rootfs.ext4"
 export KERNEL_DEBUG_IMG="${BUILDROOT_DIR}/output/build/linux-*/vmlinux"
