@@ -193,10 +193,7 @@ The kernel dir really only contains two interesting subdirs:
 
 ### slab
 
-
-
-
-
+Kernel memory slabs listing?
 
 # Resources
 
