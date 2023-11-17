@@ -1,6 +1,4 @@
-# Playing with out Raw Socks
-
-Goal in this part is to actually use our raw socket generator and sniffer to send packets back and forth and see if we can learn anything from there. This is less of a super specific goal oriented lesson and more of a just play around and annotate anything youve learned. 
+# Reverse Engineer a PHY Driver
 
 # Refactor Code
 
@@ -29,17 +27,15 @@ cd external_packages/ethram/src
 make
 ```
 
-# CRC, Packet Len, and MAC addr Lessons
+## CRC, Packet Len, and MAC addr Lessons
 
 We set up the laptop to send and the pi to recv and noticed the following:
 
-* 
+* Packets inbound to pi must have MAC dest match or have a broadcast MAC to register
+* In C code, raw sockets do not have any transparency into CRC, it is purely hardware.
+    * Although 802.3 states this can be done by the MAC or PHY
+* Stats on interface can be dumped via the [script](../scripts/sysfs_net_stat_dump.sh)
+* If not listening for raw socket packets they get dropped
+* Max Packet len is 1518 including CRC and 1514 in userspace raw socket
 
-# Interface stats
-
-
-
-
-# Wireshark vs Our Sniffer
-
-# Resources
+# Setting Up to trigger GDB on PHY init
