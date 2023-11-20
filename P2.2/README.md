@@ -47,9 +47,9 @@ We set up the laptop to send and the pi to recv and noticed the following:
 
 # MDIO Bus Hacking
 
-MDIO Registers (Clause 22)
-:------------:|
-![](../Docs/mdio_c22_reg_table.png)
+MDIO Registers (Clause 22) | Control Reg (0x0) Bit Map 
+:------------:|:------------:
+![](../Docs/mdio_c22_reg_table.png) | ![](../Docs/mdio_c22_control_reg.png)
 
 Pull PHYID from MDIO Bus:
 
@@ -60,3 +60,4 @@ Pull PHYID from MDIO Bus:
 ~ phytool read eth0/1/3
 0x84a2
 ```
+
