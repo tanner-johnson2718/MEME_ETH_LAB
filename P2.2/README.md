@@ -1,8 +1,9 @@
 # Reverse Engineer the PHY on the RPI
 
 * BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
-* installed mdio and ethtool packages and reflashed the sd
-    * Didnt work so will need to use someother means to interface with low level PHY stuff
+* installed phytool from buildroot packages menu
+* `include/linux/brcmphy.h` contains the register definitions for the PHY
+* `include/linux/phy.c` contains includes for phy_read, phy state mahcine, etc.
 
 # Code Set Up
 
@@ -29,7 +30,7 @@ source ./scripts/env_init.sh
 And on the host side we can build x86 versions of the code:
 
 ```bash
-cd external_packages/ethram/src
+cd external_packages/ethraw/src
 make
 ```
 
@@ -46,10 +47,16 @@ We set up the laptop to send and the pi to recv and noticed the following:
 
 # MDIO Bus Hacking
 
-Goal:
-    1) Enumerate all MDIO registers that are accessible
-    2) Have some utility in place to read and write those registers
+MDIO Registers (Clause 22)
+:------------:|
+![](../Docs/mdio_c22_reg_table.png)
 
-* So we need to find which physical addrs are associated with the MDIO bus
-* `include/linux/brcmphy.h` contains the register definitions for the PHY
-* `include/linux/phy.c` contains includes for phy_read, phy state mahcine, etc.
+Pull PHYID from MDIO Bus:
+
+```bash
+# phytool <read/write> <if/phy num/reg> where phy num can be pulled from the sysfs interface
+~ phytool read eth0/1/2
+0x600d
+~ phytool read eth0/1/3
+0x84a2
+```
