@@ -39,3 +39,5 @@ We set up the laptop to send and the pi to recv and noticed the following:
 * Max Packet len is 1518 including CRC and 1514 in userspace raw socket
 
 # Setting Up to trigger GDB on PHY init
+
+* BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
