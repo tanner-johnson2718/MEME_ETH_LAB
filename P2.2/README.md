@@ -1,6 +1,12 @@
-# Reverse Engineer a PHY Driver
+# Reverse Engineer the PHY on the RPI
 
-# Refactor Code
+* BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
+* installed mdio and ethtool packages and reflashed the sd
+    * Didnt work so will need to use someother means to interface with low level PHY stuff
+
+# Code Set Up
+
+## Refactor Code
 
 The first thing we want todo is refacor the code. Also we need a dedicated place for this code to reside. So we moved the official files into the `external_packages/ethraw` directory and depricated the first version contained in `P1.1`. Next we did the following:
 
@@ -38,6 +44,12 @@ We set up the laptop to send and the pi to recv and noticed the following:
 * If not listening for raw socket packets they get dropped
 * Max Packet len is 1518 including CRC and 1514 in userspace raw socket
 
-# Setting Up to trigger GDB on PHY init
+# MDIO Bus Hacking
 
-* BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
+Goal:
+    1) Enumerate all MDIO registers that are accessible
+    2) Have some utility in place to read and write those registers
+
+* So we need to find which physical addrs are associated with the MDIO bus
+* `include/linux/brcmphy.h` contains the register definitions for the PHY
+* `include/linux/phy.c` contains includes for phy_read, phy state mahcine, etc.
