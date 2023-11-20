@@ -1,4 +1,4 @@
-# Reverse Engineer the PHY on the RPI
+# MDIO Bus Trickery on the PI
 
 * BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
 * installed phytool and ethtool from buildroot packages menu
@@ -51,7 +51,7 @@ MDIO Registers (Clause 22) | Control Reg (0x0) Bit Map
 :------------:|:------------:
 ![](../Docs/mdio_c22_reg_table.png) | ![](../Docs/mdio_c22_control_reg.png)
 
-Pull PHYID from MDIO Bus:
+* Pull PHYID from MDIO Bus:
 ```bash
 # phytool <read/write> <if/phy num/reg> where phy num can be pulled from the ethtool util
 ~ phytool read eth0/1/2
@@ -60,7 +60,7 @@ Pull PHYID from MDIO Bus:
 0x84a2
 ```
 
-Place into loopback mode
+* Place into loopback mode
 ```bash
 # The default ctl reg is 0x1140. We want to wipe aneg and enable loopback so we write 0x4140
 # Failure to turn off aneg breaks the interface.
@@ -69,3 +69,16 @@ sniff eth0 &
 gen eth0 d8:3a:dd:49:fc:c2 d8:3a:dd:49:fc:c2 0x6969 1000
 ```
 
+* Force a PHY Reset
+```bash
+phytool write eth0/1/0 0x9140
+```
+
+* Force to not use aneg and manually set speed
+* Why does bus return `0xfffb` when invalid PHY Addr passed
+* How to know if using clause 22 or clause 45 reg sets
+* Vendor Specific registers in brcmphy?
+* Aneg registers?
+
+# Resources
+* [Chap 22.2 of 802.3](../Docs/document.pdf)
