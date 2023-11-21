@@ -2,38 +2,22 @@
 #include <linux/kdb.h>
 #include <linux/kernel.h>
 #include <linux/kprobes.h>
+#include <linux/string.h>
 
-static struct kprobe kp_kln = 
-{
-    .symbol_name = "kallsyms_lookup_name",
+unsigned long (*kln_pointer)(const char *name) = NULL;
+static char str_buffer[64] = "kallsyms_lookup_name";
+static struct kprobe kp = {
+    .symbol_name = str_buffer,
 };
-
-/*
- * All kdb shell command call backs receive argc and argv, where
- * argv[0] is the command the end user typed
- */
-static int kdb_hello_cmd(int argc, const char **argv)
-{
-	if (argc > 1)
-		return KDB_ARGCOUNT;
-
-	if (argc)
-		kdb_printf("Hello %s.\n", argv[1]);
-	else
-		kdb_printf("Hello world!\n");
-
-	return 0;
-}
 
 static int kdb_symbol_name_search(int argc, const char **argv)
 {
-    if (! (argc == 2))
+    if (! (argc == 1))
     {
         return KDB_ARGCOUNT;   
     }
     
-    // unsigned long addr = kallsyms_lookup_name(argv[1]);
-    // kdb_printf("%s resolves to %lx\n", argv[1], addr);
+    kdb_printf("%s -> 0x%lx\n", argv[1], kln_pointer(argv[1]));
 
     return 0;
 }
@@ -54,31 +38,26 @@ static int __init kdb_hello_cmd_init(void)
 
     pr_info("KDB Helper Loading\n");
 
-	kdb_register("hello", kdb_hello_cmd, "[string]",
-		     "Say Hello World or Hello [string]", 0);
+    kdb_register("addr", kdb_symbol_name_search, "[string]",
+                 "Search for addr of kernel symbol", 0);
 
-    kdb_register("sym_to_addr", kdb_symbol_name_search, "[string]",
-                 "Search for addr of kernel symbol", 3);
-
-    if(register_kprobe(&kp_kln))
+    if(register_kprobe(&kp))
     {
-        pr_info("kallsyms_lookup_name kprobe failed\n");
+        pr_info("done goofed on register probe\n");
         return -1;
     }
 
-    pr_info("kallsyms_lookup_name: %px\n", kp_kln.addr);
+    kln_pointer = (long unsigned int (*)(const char *)) kp.addr;
+
+    unregister_kprobe(&kp);
 
 	return 0;
 }
 
 static void __exit kdb_hello_cmd_exit(void)
 {
-    pr_info("KDB Helper Unlaoded\n");
-
-	kdb_unregister("hello");
-    kdb_unregister("sym_to_addr");
-
-    unregister_kprobe(&kp_kln);
+    pr_info("KDB Helper Unloaded\n");
+    kdb_unregister("addr");
 }
 
 module_init(kdb_hello_cmd_init);

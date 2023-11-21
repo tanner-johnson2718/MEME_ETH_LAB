@@ -125,19 +125,36 @@ CONFIG_KGDB_SERIAL_CONSOLE=y
 CONFIG_KGDB_KDB=y
 CONFIG_KDB_KEYBOARD=y
 CONFIG_MAGIC_SYSRQ=y
+CONFIG_KALLSYMS=y
 ```
 
 Booting the PI with these cmd line options and the proper config params leads to a proper early boot and then a halt with the following kdb prompt: `[0] kdb> `. This is the kdb shell interface. Typing help shows how to apply break points, get back traces, examine memory, etc. Typing go starts execution again. During execution to trigger kdb type `echo g > /proc/sysrq-trigger` which will halt the kernel and invokes kdb. Finally to completely disable kdb, type `echo '' > /sys/module/kgdboc/parameters/kgdboc`. 
 
 ## Writing KDB Modules, a case study
 
-* `kernel/trace/trace_kdb.c`
-* `samples/kdb/kdb_hello.c` -> `extrern_packages/kdbhelper/`
-* `kernel/debug/kdb/kdb_bp.c`
-* `kernel/debug/kdb/kdb_support.c`
-* `include/linux/kallsyms.h`
-* kprobes work around
-* /proc/kallsyms interface
+One benefit of kdb is we can easily extend it with kernel modules. `kernel/trace/trace_kdb.c` gives an example of a well modularized kdb module. We will use `samples/kdb/kdb_hello.c` and move it to our external packages dir, `extrern_packages/kdbhelper/`, to be build by build root. The flow we will use for this is as follows. After the first build of the system with `./scripts/build.sh`, we will rebuild any changes to our kdb modules via the `rebuild_external_packages.sh` script. On the pi run the following:
+
+```bash
+# unload current module, make sure we are at home dir, remove module from device
+rmmod kdbhelper
+cd ~
+rm -rf kdbhelper.ko
+<exit to build pc>
+
+# Push script and load
+./scripts/serial_push.sh ./buildroot/output/kdbhelper*/kdbhelper.ko
+minicom
+insmod kdbhelper.ko
+
+# Enter kdb context via echo g > /proc/sysrq-trigger. Just saved into script
+./kdb.sh
+
+# When done or need to update module, clear bps and go the kernel
+bc *
+go
+```
+
+This flow allows one to build the `kdbhelper` module, flash it, and load it back into the kernel. The first addition we would like ot make to kdb is a way to map a kernel symbol to an address. Since we compiled with the `CONFIG_KALLSYMS=y` option we have access to the /proc/kallsyms. Which can be searched (or reverese searched) via command line tools. Core kernel KDB functions like  `kernel/debug/kdb/kdb_bp.c` and `kernel/debug/kdb/kdb_support.c` can use functions from `include/linux/kallsyms.h` but a recent kernel update removed the exporting of these kall symbols to kernel modules. This we come up with a bit of a hack using kprobes. This can be found in the current kdbhelper. One thing to keep in mind when building these kdb modules is that **kdb runs in an interupt context**, so be careful what you do in them.
 
 ## Getting KDB Instruction Dissasm
 
