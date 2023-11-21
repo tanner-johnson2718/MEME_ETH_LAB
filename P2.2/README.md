@@ -1,4 +1,4 @@
-# MDIO Bus Trickery on the PI
+# BCM54213PE Driver Reverse Engineer
 
 * BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
 * installed phytool and ethtool from buildroot packages menu
@@ -70,7 +70,7 @@ gen eth0 d8:3a:dd:49:fc:c2 d8:3a:dd:49:fc:c2 0x6969 1000
 
 * Force a PHY Reset
 ```bash
-phytool write eth0/1/0 0x9140
+phytool write eth0/1/0 0x8000
 ```
 
 * Force to not use aneg and manually set speed
@@ -84,11 +84,31 @@ PC1 > phytool write <if>/<phy_ad>/0 0x0100
 PC2 > phytool write <if>/<phy_ad>/0 0x0100
 ```
 
-* How to know if using clause 22 or clause 45 reg sets
+* Get PHY status and capabilities
 
-* Why does bus return `0xfffb` when invalid PHY Addr passed
-* Vendor Specific registers in brcmphy?
+MDIO Status Register (0x1) | Extended Status Register (0xf) 
+:------------:|:------------:
+![](../Docs/mdio_c22_status_reg.png) | ![](../Docs/mdio_c22_ext_stat_reg.png)
+
+
+
 * Aneg registers?
+
+# Digging into the actual driver
+
+We will start with looking at the vendor specific registers which are defined in `include/linux/brcmphy.h`.
+
+| Reg Addr | Name | Comments |
+| --- | --- | --- |
+| 16 | Extended control register | - |
+| 17 | Extended status register | - |
+| 21 | Expansion register data | - |
+| 23 | Expansion register select | - |  
+| 24 | Auxiliary control register | - |
+| 26 | Interrupt status register | - |
+| 27 | Interrupt mask register | - |
+
+
 
 # Resources
 * [Chap 22.2 of 802.3](../Docs/document.pdf)
