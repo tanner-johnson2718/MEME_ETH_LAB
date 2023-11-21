@@ -114,7 +114,34 @@ ieee-phy: reg:0x0f val:0x3000
 * Aneg registers, 4, 5, 6, 7, and 8 and  Master-Slave registers 9 and 10 outside of scope but are used for aneg for 1000 Base T capable PHYs
 
 
+# Setting up the debug environment
+
+Add the following to `cmdline.txt`: `kgdboc=ttyAMA0 kgdbwait`. This will halt the kernel loading as early as possible and have it wait for the debugger to connect. With this set up we will NOT use the remote gdb debugger as it is a pain in the butt and it seems as kdb (the built in command line debugger) provides a much simpler and less feature rich interface but is sufficiently powerful. To use kdb one must verify the following kernel config options are set:
+
+```
+CONFIG_FRAME_POINTER=y
+CONFIG_KGDB=y
+CONFIG_KGDB_SERIAL_CONSOLE=y
+CONFIG_KGDB_KDB=y
+CONFIG_KDB_KEYBOARD=y
+CONFIG_MAGIC_SYSRQ=y
+```
+
+Booting the PI with these cmd line options and the proper config params leads to a proper early boot and then a halt with the following kdb prompt: `[0] kdb> `. This is the kdb shell interface. Typing help shows how to apply break points, get back traces, examine memory, etc. Typing go starts execution again. During execution to trigger kdb type `echo g > /proc/sysrq-trigger` which will halt the kernel and invokes kdb. Finally to completely disable kdb, type `echo '' > /sys/module/kgdboc/parameters/kgdboc`. 
+
+## Writing KDB Modules
+
+* `kernel/trace/trace_kdb.c`
+* `samples/kdb/kdb_hello.c` -> `extrern_packages/kdbhelper/`
+
+
+
+## Getting KDB Instruction Dissasm
+
+
+
 # Digging into the actual driver
+
 
 * We will start with looking at the vendor specific registers which are defined in `include/linux/brcmphy.h`.
 
@@ -137,3 +164,4 @@ ieee-phy: reg:0x0f val:0x3000
 
 # Resources
 * [Chap 22.2 of 802.3](../Docs/document.pdf)
+* https://docs.kernel.org/dev-tools/kgdb.html
