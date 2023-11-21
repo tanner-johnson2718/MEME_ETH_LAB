@@ -90,9 +90,29 @@ MDIO Status Register (0x1) | Extended Status Register (0xf)
 :------------:|:------------:
 ![](../Docs/mdio_c22_status_reg.png) | ![](../Docs/mdio_c22_ext_stat_reg.png)
 
+```bash
+# Gives a Pretty output of the control and status registers
+phytool print eth0/1
+ieee-phy: id:0x600d84a2
 
+   ieee-phy: reg:BMCR(0x00) val:0x1140
+      flags:          -reset -loopback +aneg-enable -power-down -isolate -aneg-restart -collision-test
+      speed:          1000-full
 
-* Aneg registers?
+   ieee-phy: reg:BMSR(0x01) val:0x796d
+      capabilities:   -100-b4 +100-f +100-h +10-f +10-h -100-t2-f -100-t2-h
+      flags:          +ext-status +aneg-complete -remote-fault +aneg-capable +link -jabber +ext-register
+
+# Supports 1000 Base T w/ both full and half duplex
+phytool print eth0/1/15
+ieee-phy: reg:0x0f val:0x3000
+```
+
+* Aneg registers, 4, 5, 6, 7, and 8
+
+* Master-Slave registers 9 and 10
+* PSE registers 11 and 12. PoE registers
+* MMD registers 13 and 14 are used in Clause 45 addressing to expand the amount of registers on can access.
 
 # Digging into the actual driver
 
