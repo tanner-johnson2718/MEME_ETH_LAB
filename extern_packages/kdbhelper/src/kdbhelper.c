@@ -1,15 +1,12 @@
-/*
- * Created by: Jason Wessel <jason.wessel@windriver.com>
- *
- * Copyright (c) 2010 Wind River Systems, Inc.  All Rights Reserved.
- *
- * This file is licensed under the terms of the GNU General Public
- * License version 2. This program is licensed "as is" without any
- * warranty of any kind, whether express or implied.
- */
-
 #include <linux/module.h>
 #include <linux/kdb.h>
+#include <linux/kernel.h>
+#include <linux/kprobes.h>
+
+static struct kprobe kp_kln = 
+{
+    .symbol_name = "kallsyms_lookup_name",
+};
 
 /*
  * All kdb shell command call backs receive argc and argv, where
@@ -28,6 +25,18 @@ static int kdb_hello_cmd(int argc, const char **argv)
 	return 0;
 }
 
+static int kdb_symbol_name_search(int argc, const char **argv)
+{
+    if (! (argc == 2))
+    {
+        return KDB_ARGCOUNT;   
+    }
+    
+    // unsigned long addr = kallsyms_lookup_name(argv[1]);
+    // kdb_printf("%s resolves to %lx\n", argv[1], addr);
+
+    return 0;
+}
 
 static int __init kdb_hello_cmd_init(void)
 {
@@ -42,14 +51,34 @@ static int __init kdb_hello_cmd_init(void)
 	 *      0 == type the whole command
 	 *      1 == match both "g" and "go" for example
 	 */
+
+    pr_info("KDB Helper Loading\n");
+
 	kdb_register("hello", kdb_hello_cmd, "[string]",
 		     "Say Hello World or Hello [string]", 0);
+
+    kdb_register("sym_to_addr", kdb_symbol_name_search, "[string]",
+                 "Search for addr of kernel symbol", 3);
+
+    if(register_kprobe(&kp_kln))
+    {
+        pr_info("kallsyms_lookup_name kprobe failed\n");
+        return -1;
+    }
+
+    pr_info("kallsyms_lookup_name: %px\n", kp_kln.addr);
+
 	return 0;
 }
 
 static void __exit kdb_hello_cmd_exit(void)
 {
+    pr_info("KDB Helper Unlaoded\n");
+
 	kdb_unregister("hello");
+    kdb_unregister("sym_to_addr");
+
+    unregister_kprobe(&kp_kln);
 }
 
 module_init(kdb_hello_cmd_init);

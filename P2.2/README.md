@@ -129,12 +129,15 @@ CONFIG_MAGIC_SYSRQ=y
 
 Booting the PI with these cmd line options and the proper config params leads to a proper early boot and then a halt with the following kdb prompt: `[0] kdb> `. This is the kdb shell interface. Typing help shows how to apply break points, get back traces, examine memory, etc. Typing go starts execution again. During execution to trigger kdb type `echo g > /proc/sysrq-trigger` which will halt the kernel and invokes kdb. Finally to completely disable kdb, type `echo '' > /sys/module/kgdboc/parameters/kgdboc`. 
 
-## Writing KDB Modules
+## Writing KDB Modules, a case study
 
 * `kernel/trace/trace_kdb.c`
 * `samples/kdb/kdb_hello.c` -> `extrern_packages/kdbhelper/`
-
-
+* `kernel/debug/kdb/kdb_bp.c`
+* `kernel/debug/kdb/kdb_support.c`
+* `include/linux/kallsyms.h`
+* kprobes work around
+* /proc/kallsyms interface
 
 ## Getting KDB Instruction Dissasm
 
@@ -165,3 +168,5 @@ Booting the PI with these cmd line options and the proper config params leads to
 # Resources
 * [Chap 22.2 of 802.3](../Docs/document.pdf)
 * https://docs.kernel.org/dev-tools/kgdb.html
+* https://www.kernel.org/doc/html/next/networking/phy.html
+* https://docs.kernel.org/trace/kprobes.html
