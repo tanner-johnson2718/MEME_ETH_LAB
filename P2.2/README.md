@@ -3,7 +3,8 @@
 * BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
 * installed phytool and ethtool from buildroot packages menu
 * `include/linux/brcmphy.h` contains the register definitions for the PHY
-* `include/linux/phy.c` contains includes for phy_read, phy state mahcine, etc.
+* `include/linux/phy.h` contains includes for phy_read, phy state mahcine, etc.
+* `drivers/net/phy/phy_device.c` contains generic phy driver device code
 
 # Code Set Up
 

@@ -1,2 +1,6 @@
 set serial baud 115200
 target remote /dev/ttyUSB0
+
+b bcm54xx_config_init
+b bcm_phy_ack_intr
+b bcm_phy_config_intr
