@@ -46,7 +46,6 @@ We set up the laptop to send and the pi to recv and noticed the following:
 * Max Packet len is 1518 including CRC and 1514 in userspace raw socket
 
 # MDIO Bus Hacking
-
 MDIO Registers (Clause 22) | Control Reg (0x0) Bit Map 
 :------------:|:------------:
 ![](../Docs/mdio_c22_reg_table.png) | ![](../Docs/mdio_c22_control_reg.png)
@@ -75,8 +74,19 @@ phytool write eth0/1/0 0x9140
 ```
 
 * Force to not use aneg and manually set speed
-* Why does bus return `0xfffb` when invalid PHY Addr passed
+```bash
+# On both stations set the isolate and powerdown bits to disable and block the aneg proc
+PC1 > phytool write <if>/<phy_ad>/0 0x0c00
+PC2 > phytool write <if>/<phy_ad>/0 0x0c00
+
+# Bring both PHYs up in the desired speed and duplex. Below shows 10Mb - Full operation
+PC1 > phytool write <if>/<phy_ad>/0 0x0100
+PC2 > phytool write <if>/<phy_ad>/0 0x0100
+```
+
 * How to know if using clause 22 or clause 45 reg sets
+
+* Why does bus return `0xfffb` when invalid PHY Addr passed
 * Vendor Specific registers in brcmphy?
 * Aneg registers?
 
