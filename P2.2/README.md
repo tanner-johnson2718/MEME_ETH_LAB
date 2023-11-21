@@ -108,15 +108,14 @@ phytool print eth0/1/15
 ieee-phy: reg:0x0f val:0x3000
 ```
 
-* Aneg registers, 4, 5, 6, 7, and 8
-
-* Master-Slave registers 9 and 10
 * PSE registers 11 and 12. PoE registers
 * MMD registers 13 and 14 are used in Clause 45 addressing to expand the amount of registers on can access.
+* Aneg registers, 4, 5, 6, 7, and 8 and  Master-Slave registers 9 and 10 outside of scope but are used for aneg for 1000 Base T capable PHYs
+
 
 # Digging into the actual driver
 
-We will start with looking at the vendor specific registers which are defined in `include/linux/brcmphy.h`.
+* We will start with looking at the vendor specific registers which are defined in `include/linux/brcmphy.h`.
 
 | Reg Addr | Name | Comments |
 | --- | --- | --- |
@@ -128,7 +127,12 @@ We will start with looking at the vendor specific registers which are defined in
 | 26 | Interrupt status register | - |
 | 27 | Interrupt mask register | - |
 
-
+* List of Relevant functions
+* Call graph
+* Setting up GDB to intercept
+* How much of it is genphy code
+* Find that ack interrupt shit
+* Track down and intercept all interrupts associated with the phy driver
 
 # Resources
 * [Chap 22.2 of 802.3](../Docs/document.pdf)
