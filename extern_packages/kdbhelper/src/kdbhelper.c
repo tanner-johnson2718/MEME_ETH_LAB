@@ -3,14 +3,32 @@
 #include <linux/kernel.h>
 #include <linux/kprobes.h>
 #include <linux/string.h>
+#include <linux/kallsyms.h>
 
+// kln -> kall lookup name
+// Input name, return addr
 unsigned long (*kln_pointer)(const char *name) = NULL;
-static char str_buffer[64] = "kallsyms_lookup_name";
-static struct kprobe kp = {
-    .symbol_name = str_buffer,
+static char str_buffer_kln[KSYM_NAME_LEN] = "kallsyms_lookup_name";
+static struct kprobe kp_kln = 
+{
+    .symbol_name = str_buffer_kln,
 };
 
-static int kdb_symbol_name_search(int argc, const char **argv)
+// kla -> kall lookup addr
+// Input addr. Outputs symbolsize, offset, modname if its kernel module symbol
+// will be filled in with the module name. namebuf must be of size 
+// KSYM_NAME_LEN and will be filled and returned if symbol found. 
+char* (*kla_pointer)(unsigned long addr,
+			    unsigned long *symbolsize,
+			    unsigned long *offset,
+			    char **modname, char *namebuf) = NULL;
+static char str_buffer_kla[KSYM_NAME_LEN] = "kallsyms_lookup";
+static struct kprobe kp_kla =
+{
+    .symbol_name = str_buffer_kla,
+};
+
+static int kdb_kln(int argc, const char **argv)
 {
     if (! (argc == 1))
     {
@@ -18,6 +36,28 @@ static int kdb_symbol_name_search(int argc, const char **argv)
     }
     
     kdb_printf("%s -> 0x%lx\n", argv[1], kln_pointer(argv[1]));
+
+    return 0;
+}
+
+static int kdb_kla(int argc, const char **argv)
+{
+    if (! (argc == 1))
+    {
+        return KDB_ARGCOUNT;   
+    }
+
+    unsigned long addr = 0;
+    unsigned long symbolsize = 0;
+    unsigned long offset = 0;
+	char namebuf[KSYM_NAME_LEN] = {0};
+    char* modname = NULL;
+
+    addr = simple_strtoul(argv[1], NULL, 16);
+
+    char* ret = kla_pointer(addr, &symbolsize, &offset, &modname, namebuf);
+
+    kdb_printf("0x%lx -> %s (off=%ld) (sze=%ld) (mod=%s)\n", addr, ret ? ret : "", offset, symbolsize, modname ? modname : "");
 
     return 0;
 }
@@ -38,18 +78,34 @@ static int __init kdb_hello_cmd_init(void)
 
     pr_info("KDB Helper Loading\n");
 
-    kdb_register("addr", kdb_symbol_name_search, "[string]",
+    kdb_register("addr", kdb_kln, "[string]",
                  "Search for addr of kernel symbol", 0);
 
-    if(register_kprobe(&kp))
+    if(register_kprobe(&kp_kln))
     {
-        pr_info("done goofed on register probe\n");
+        pr_info("Failed to register kprobe %s\n", str_buffer_kln);
         return -1;
     }
 
-    kln_pointer = (long unsigned int (*)(const char *)) kp.addr;
+    kln_pointer = (long unsigned int (*)(const char *)) kp_kln.addr;
 
-    unregister_kprobe(&kp);
+    unregister_kprobe(&kp_kln);
+
+    kdb_register("sym", kdb_kla, "[hex str]",
+                 "Search for symbol given addr", 0);
+
+    if(register_kprobe(&kp_kla))
+    {
+        pr_info("Failed to register kprobe %s\n", str_buffer_kla);
+        return -1;
+    }
+
+    kla_pointer = (char* (*)(unsigned long,
+			    unsigned long*,
+			    unsigned long*,
+			    char **, char *)) kp_kla.addr;
+
+    unregister_kprobe(&kp_kla);
 
 	return 0;
 }
@@ -58,6 +114,7 @@ static void __exit kdb_hello_cmd_exit(void)
 {
     pr_info("KDB Helper Unloaded\n");
     kdb_unregister("addr");
+    kdb_unregister("sym");
 }
 
 module_init(kdb_hello_cmd_init);
