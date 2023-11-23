@@ -1,4 +1,4 @@
-# BCM54213PE Driver Reverse Engineer
+# Hacking the BCM54213PE Driver
 
 * BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
 * installed phytool and ethtool from buildroot packages menu
@@ -158,9 +158,9 @@ This flow allows one to build the `kdbhelper` module, flash it, and load it back
 
 ## Getting KDB Instruction Dissasm
 
-
-
 # Digging into the actual driver
+
+## Vendor Registers
 
 
 * We will start with looking at the vendor specific registers which are defined in `include/linux/brcmphy.h`.
@@ -175,12 +175,36 @@ This flow allows one to build the `kdbhelper` module, flash it, and load it back
 | 26 | Interrupt status register | - |
 | 27 | Interrupt mask register | - |
 
-* List of Relevant functions
-* Call graph
-* Setting up GDB to intercept
-* How much of it is genphy code
-* Find that ack interrupt shit
-* Track down and intercept all interrupts associated with the phy driver
+* Shadow registers?
+
+## Driver functions
+ 
+* genphy code
+    * genphy_update_link()  polled
+    * genphy_read_status() polled
+    * genphy_read_lpa() called on reset
+    * The following commonly used ones appeared to not be called
+        * genphy_aneg_done
+        * genphy_read_status_fixed
+        * genphy_config_eee_advert
+        * genphy_setup_forced
+        * genphy_restart_aneg
+        * genphy_suspend
+        * genphy_resume
+        * genphy_loopback
+        * genphy_read_abilities
+        * genphy_soft_reset
+* config_init and config ack is called over and over again on a PHY reset
+    * proper init probably requires some timing and so stopping exe causes init to fail 
+    * this causes init code to be called over and over
+    * need to dig into MAC driver to verify this
+* cant get ack_intr to trigger
+    * IRQ for this PHY is disabled
+* 
+
+
+
+## Messing with the LEDs
 
 # Resources
 * [Chap 22.2 of 802.3](../Docs/document.pdf)

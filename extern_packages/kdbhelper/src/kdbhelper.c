@@ -71,18 +71,25 @@ static int kdb_phy_dump(int argc, const char **argv)
     }
 
     void* addr = (void*) simple_strtoul(argv[1], NULL, 16);
-    kdb_printf("Phy Dev Addr = 0x%p\n", addr);
+    kdb_printf("Phy Dev Addr = 0x%lx\n", addr);
 
     struct phy_device *dev = (struct phy_device *) addr;
 
-    kdb_printf("Phy ID       = 0x%x\n", dev->phy_id);
-    kdb_printf("IRQ          = %d\n", dev->irq);
-    kdb_printf("Is c45       = %d\n", dev->is_c45);
-    kdb_printf("Soft Reset   = %p\n", dev->soft_reset);
-    kdb_printf("Config init  = %p", dev->config_init)
-    kdb_printf("Get Features = %p\n", dev->probe);
-    kdb_printf("Suspend      = %p\n", dev->suspend);
-    kdb_printf("Resume       = %p\n", dev->resume);
+    kdb_printf("Phy ID          = 0x%x\n", dev->phy_id);
+    kdb_printf("IRQ             = %d\n", dev->irq);
+    kdb_printf("Is c45          = %d\n", dev->is_c45);
+    kdb_printf("IRQ Enabled     = %d\n", dev->interrupts);
+    kdb_printf("Driver          = %lx\n", dev->drv);
+    kdb_printf("   Soft Reset   = %lx\n", dev->drv->soft_reset);
+    kdb_printf("   Config init  = %lx\n", dev->drv->config_init);
+    kdb_printf("   Get Features = %lx\n", dev->drv->probe);
+    kdb_printf("   Suspend      = %lx\n", dev->drv->suspend);
+    kdb_printf("   Resume       = %lx\n", dev->drv->resume);
+    kdb_printf("   Config Aneg  = %lx\n", dev->drv->config_aneg);
+    kdb_printf("   Aneg Done    = %lx\n", dev->drv->aneg_done);
+    kdb_printf("   Read Status  = %lx\n", dev->drv->read_status);
+    kdb_printf("   Ack Int      = %lx\n", dev->drv->ack_interrupt);
+    kdb_printf("   Config Int   = %lx\n", dev->drv->config_intr);
 
     return 0;
 }
