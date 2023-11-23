@@ -160,22 +160,23 @@ This flow allows one to build the `kdbhelper` module, flash it, and load it back
 
 # Digging into the actual driver
 
+The conclusion of digging into the driver is that there isn't a whole lot of interesting code here. The MAC driver more than likely is responsible for much of the much more interesting network behavior. However we share below some of our findings about the PHY driver below.
+
 ## Vendor Registers
 
 
 * We will start with looking at the vendor specific registers which are defined in `include/linux/brcmphy.h`.
 
-| Reg Addr | Name | Comments |
-| --- | --- | --- |
-| 16 | Extended control register | - |
-| 17 | Extended status register | - |
-| 21 | Expansion register data | - |
-| 23 | Expansion register select | - |  
-| 24 | Auxiliary control register | - |
-| 26 | Interrupt status register | - |
-| 27 | Interrupt mask register | - |
-
-* Shadow registers?
+| Reg Addr | Name | 
+| --- | --- |
+| 16 | Extended control register |
+| 17 | Extended status register |
+| 21 | Expansion register data | 
+| 23 | Expansion register select |  
+| 24 | Auxiliary control register |
+| 26 | Interrupt status register | 
+| 27 | Interrupt mask register |
+| 28 | Shadow register |
 
 ## Driver functions
  
@@ -200,11 +201,28 @@ This flow allows one to build the `kdbhelper` module, flash it, and load it back
     * need to dig into MAC driver to verify this
 * cant get ack_intr to trigger
     * IRQ for this PHY is disabled
-* 
-
-
 
 ## Messing with the LEDs
+
+Using `brcmphy.h` for the LED codes:
+
+```bash
+# Write to select the LED expansion register
+phytool write eth0/1/23 0x0f04
+
+# Blink both lights off and on
+phytool write eth0/1/21 0x0144
+sleep 1
+phytool write eth0/1/21 0x0155
+sleep 1
+....
+
+# One on other off
+phytool write eth0/1/21 0x0145
+phytool write eth0/1/21 0x0154
+```
+
+see the aformentioned header file for all possible LED blink conditions.
 
 # Resources
 * [Chap 22.2 of 802.3](../Docs/document.pdf)
