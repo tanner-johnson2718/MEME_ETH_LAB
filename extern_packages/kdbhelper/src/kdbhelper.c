@@ -4,6 +4,7 @@
 #include <linux/kprobes.h>
 #include <linux/string.h>
 #include <linux/kallsyms.h>
+#include <linux/phy.h>
 
 // kln -> kall lookup name
 // Input name, return addr
@@ -62,6 +63,30 @@ static int kdb_kla(int argc, const char **argv)
     return 0;
 }
 
+static int kdb_phy_dump(int argc, const char **argv)
+{
+    if (! (argc == 1))
+    {
+        return KDB_ARGCOUNT;   
+    }
+
+    void* addr = (void*) simple_strtoul(argv[1], NULL, 16);
+    kdb_printf("Phy Dev Addr = 0x%p\n", addr);
+
+    struct phy_device *dev = (struct phy_device *) addr;
+
+    kdb_printf("Phy ID       = 0x%x\n", dev->phy_id);
+    kdb_printf("IRQ          = %d\n", dev->irq);
+    kdb_printf("Is c45       = %d\n", dev->is_c45);
+    kdb_printf("Soft Reset   = %p\n", dev->soft_reset);
+    kdb_printf("Config init  = %p", dev->config_init)
+    kdb_printf("Get Features = %p\n", dev->probe);
+    kdb_printf("Suspend      = %p\n", dev->suspend);
+    kdb_printf("Resume       = %p\n", dev->resume);
+
+    return 0;
+}
+
 static int __init kdb_hello_cmd_init(void)
 {
 	/*
@@ -107,6 +132,10 @@ static int __init kdb_hello_cmd_init(void)
 
     unregister_kprobe(&kp_kla);
 
+    kdb_register("phy", kdb_phy_dump, "[addr]",
+                 "Dump Phy data structs given addr", 0);
+
+
 	return 0;
 }
 
@@ -115,6 +144,7 @@ static void __exit kdb_hello_cmd_exit(void)
     pr_info("KDB Helper Unloaded\n");
     kdb_unregister("addr");
     kdb_unregister("sym");
+    kdb_unregister("phy");
 }
 
 module_init(kdb_hello_cmd_init);
