@@ -37,14 +37,13 @@ Some defining goals to get the project going and figure out a starting point are
 
 # Part 2 Linux Software Stack Exploration on RPI
 
-* [ ] [P2.1](./P2.1/) - Use sysfs kernel interface to play with NIC interface
-* [ ] [P2.2](./P2.2/) - Play with Raw Sock code
+* [X] [P2.1](./P2.1/) - Use sysfs kernel interface to play with NIC interface
+* [ ] [P2.2](./P2.2/) - Break into phy driver code
     * [X] Refactor code
-* [ ] [P2.3](./P2.3/) - Use GDB to reverse Engineer a network system calls.
-    * [ ] Find Def of relavent data structures
-    * [ ] Create a call graph
-    * [ ] Annotate importat Files
-* [ ] Reverse Engineer the BCM 2711 genet driver
+    * [X] MDIO bus
+    * [X] KDB
+    * [X] BCM54213PE Driver 
+* [ ] [P2.3](./P2.3/) Reverse Engineer the BCM 2711 genet driver
 * [ ] Track a Packet from Send to Recv in Userspaces
 * [ ] Random Clean Up
     * [ ] Address Families?
