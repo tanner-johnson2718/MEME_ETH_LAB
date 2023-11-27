@@ -35,10 +35,10 @@ Some defining goals to get the project going and figure out a starting point are
     * [X] Send and Recv a Raw Eth Frame from RPI to Laptop
     * [X] [SW Flow and How to use scripts](./P1.2/README.md#sw-flow)
 
-# Part 2 Linux Software Stack Exploration on RPI
+# Part 2 RPI MAC and PHY Drivers
 
 * [X] [P2.1](./P2.1/) - Use sysfs kernel interface to play with NIC interface
-* [ ] [P2.2](./P2.2/) - Break into phy driver code
+* [X] [P2.2](./P2.2/) - Break into phy driver code
     * [X] Refactor code
     * [X] MDIO bus
     * [X] KDB
