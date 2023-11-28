@@ -73,7 +73,6 @@ ip link set eth0 up
 * `void __iomem base;`?
 * `include/linux/netdevice.h` -> net device struct definition
 
-
 # Resources
 * [Old SKB Doc](http://vger.kernel.org/~davem/skb.html)
 * [Change MAC on a PI](../Docs/Changing-MAC-addresses.pdf)
