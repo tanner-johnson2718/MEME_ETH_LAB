@@ -1,4 +1,4 @@
 set serial baud 115200
-target remote /dev/ttyUSB0
+target remote /dev/pts/2
 
 b bcmgenet_xmit

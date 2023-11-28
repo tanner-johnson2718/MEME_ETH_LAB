@@ -15,17 +15,59 @@ The goal here to revisit using GDB over UART as writing kdb modules to dump linu
 * Add initial breakpoints to `gdb_cmds.txt`
     * You will loose the ability to halt the kernel unless you set a breakpoint that triggers
 * DO NOT step it does weirdness
+    * Given the kernel's complexity we do not get source or intruction level stepping. Its an inate limitation
 
-# KDMX
+# KDMX and the new Debug ENV
 
 Stands for KGDB-mux. Gives us two psdeou terminals that multiplex the single shared serial connection to the PI. This allows us to have both a serial terminal and KGDB over serial as well. Set up:
 
 ```bash
 cd ./scripts
 git clone git://git.kernel.org/pub/scm/utils/kernel/kgdb/agent-proxy.git/
+cd agent-proxy/kdmx
+make
 ```
 
+Now we can set up a pretty sick debug environment with 3 terminals, numbered 1 to 3 from left to right. In terminal 1:
+
+```bash
+cd ./scripts/agent-proxy/kdmx
+./kdmx -n -d -p/dev/ttyUSB0 -b115200
+serial port: /dev/ttyUSB0
+Initalizing the serial port to 115200 8n1
+/dev/pts/1 is slave pty for terminal emulator
+/dev/pts/2 is slave pty for gdb
+
+Use <ctrl>C to terminate program
+
+```
+
+This gives us a terminal running the kdmx program with debug output. Kdmx is not the most polished software ever created but is super convientent and this terminal will let us now if our pts devices are changed. Now in the second terminal:
+
+```bash
+source ./scripts/env_init.sh
+minicom -o -d -p /dev/pts/1
+```
+
+This gives us our terminal to enter kdb or interface with the command-line. For our 3rd terminal we open gdb:
+
+```bash
+# note before running this we cat the gdb_cmds.txt file to make sure our 
+# targeted port matches the pts dev created by kdmx
+cat ./scripts/gdb_cmds.txt
+source ./scripts/env_init.sh
+./scripts/connect_gdb.sh
+```
+
+Note that before we connect gdb ensure that kdb was triggered on terminal 2 (`echo g > /proc/sysrq-trigger`). Then in GDB we can debug and continue execution. To pass control back to GDB simply envoke kdb again. Invoking kdb will pass control to GDB and you cannot use both at the same time. To make it so invoking kdb actually brings you to the kdb terminal, pass control to GDB and then simply quit. This appears to be reversible and you invoke gdb again by simply connecting again.
+
+## Resource
+
+* [Kdmx Site](https://elinux.org/Kdmx)
+
 # lx-cmds
+
+# Way to jump to arbitrary code?
 
 # GDB Cheat Sheet 2.0
 
