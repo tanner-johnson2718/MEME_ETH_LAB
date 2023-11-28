@@ -45,7 +45,6 @@ def struct_dump(filename, struct_ptr):
 
         name_type_tuples.append([tuple_name, tuple_type])
 
-
     print()
     out_str = f"printf(\"{root_name}:\\n\");"
     print(out_str)
