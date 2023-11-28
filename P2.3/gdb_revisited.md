@@ -6,8 +6,28 @@ The goal here to revisit using GDB over UART as writing kdb modules to dump linu
 * [Init RPI and Script Set up](../P1.2/README.md)
 * [KDB](../P2.2/README.md#setting-up-the-debug-environment)
 * [KGDBOC Doc](https://docs.kernel.org/dev-tools/kgdb.html)
+* [Vid on KDB and KGDB](https://www.youtube.com/watch?v=HBOwoSyRmys)
 
-# Cheat Sheet 2.0
+## Quirks of GDBOC and init setup
+
+* Using the image as is, add `kgdboc=ttyAMA0 kgdbwait` to the cmdline.txt in the boot partition
+* use `connect_gdb.sh` to connect the gdb console to the remote target
+* Add initial breakpoints to `gdb_cmds.txt`
+    * You will loose the ability to halt the kernel unless you set a breakpoint that triggers
+* DO NOT step it does weirdness
+
+# KDMX
+
+Stands for KGDB-mux. Gives us two psdeou terminals that multiplex the single shared serial connection to the PI. This allows us to have both a serial terminal and KGDB over serial as well. Set up:
+
+```bash
+cd ./scripts
+git clone git://git.kernel.org/pub/scm/utils/kernel/kgdb/agent-proxy.git/
+```
+
+# lx-cmds
+
+# GDB Cheat Sheet 2.0
 
 [reference](https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf)
 
@@ -33,11 +53,7 @@ The goal here to revisit using GDB over UART as writing kdb modules to dump linu
 | `info local` | See local variables | - |
 | `info args` | See function input args | - |
 
-# Quirks of GDBOC and init setup
 
-* Using the image as is, add `kgdboc=ttyAMA0 kgdbwait` to the cmdline.txt in the boot partition
-* use `connect_gdb.sh` to connect the gdb console to the remote target
-* Add initial breakpoints
-    * You will loose the ability to halt the kernel unless you set a breakpoint that triggers
-* DO NOT step
-* 
+
+**FRAME up**??
+
