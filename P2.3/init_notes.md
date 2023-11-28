@@ -76,3 +76,4 @@ ip link set eth0 up
 # Resources
 * [Old SKB Doc](http://vger.kernel.org/~davem/skb.html)
 * [Change MAC on a PI](../Docs/Changing-MAC-addresses.pdf)
+* [Good resource on nics?](https://www.oreilly.com/library/view/linux-device-drivers/0596005903/ch17.html)
