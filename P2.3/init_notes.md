@@ -1,4 +1,4 @@
-# BCM Genet MAC Driver
+# BCM Genet MAC Driver (INIT NOTES)
 
 First Look Notes:
 * driver is bcmgenet at 'drivers/net/ethernet/broadcom/genet/*'
@@ -67,9 +67,13 @@ ip link set eth0 address 11:22:33:44:55:66
 ip link set eth0 up
 ```
 
-# Lab 2.3.3
+# Lab 2.3.3 Reading Registers on the MAC
 
+* register read and writes are just mem reads at memory mapped IO
+* `void __iomem base;`?
+* `include/linux/netdevice.h` -> net device struct definition
 
 
 # Resources
 * [Old SKB Doc](http://vger.kernel.org/~davem/skb.html)
+* [Change MAC on a PI](../Docs/Changing-MAC-addresses.pdf)

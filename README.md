@@ -16,7 +16,6 @@ Some defining goals to get the project going and figure out a starting point are
 * Understand Speed Negotiation
 * Layer 1 and 2 Protocols
 * MDIO and MII
-* Device Trees
 * Initial handshake and negotiation
 * Neighbor Discovery (0xFF)
 * Ring Buffer on NIC
