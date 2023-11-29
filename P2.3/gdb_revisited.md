@@ -99,5 +99,5 @@ The lx-commands give one powerful tools for examining the kenrel in GDB. See [he
 | `info address <symbol>` | Given a symbol look up its addr | - | 
 | `set print pretty on` | Prints variables and data structures all pretty like | - |
 | `print <var>` | Print a variable | - | 
-
-**FRAME up**??
+| `up/down <n>` | Move up or down the call stack n frames | - |
+| `set $x=7` | Define a variable x | - |
