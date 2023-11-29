@@ -39,6 +39,27 @@ We will create a kernel module to access the following function to convert to ph
 phys_addr_t virt_to_phys(const volatile void *x);
 ```
 
+It will use a sysfs interface where we write an adress to a `v_addr` file and the corresponding physical address can be read from the `p_addr` files. The external package `v2p` implements this sysfs interface and address translation. It creates a folder `/sys/kernel/v2p` which houses our `v_addr` and `p_addr` files. Using `cat` and `echo` we can easily read and write to these files. Using this module we can see what the physical address of our base pointer was in the above example.
+
+```bash
+> echo 0xffffffc011d70000 > /sys/kernel/v2p/v_addr 
+> cat /sys/kernel/v2p/p_addr 
+0x1f70000
+
+> cat /proc/iomem
+00000000-39bfffff : System RAM
+  00000000-00000fff : reserved
+  00200000-0112ffff : Kernel code
+  01130000-014bffff : reserved
+  014c0000-017effff : Kernel data
+  1ac00000-2ebfffff : reserved
+  2eff2000-2effffff : reserved
+  35c00000-39bfffff : reserved
+....
+```
+
+Oddly enough the address falls between two mapped regions of memory but itself appears to not be mapped?
+
 # TX / RX queues
 
 We start this where we left off in the first section. The question where are looking to answer is why are the q's labeled from 0-16 but only 0,1,2,3,and 16 are used?
