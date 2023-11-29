@@ -12,10 +12,11 @@ The goal here to revisit using GDB over UART as writing kdb modules to dump linu
 
 * Using the image as is, add `kgdboc=ttyAMA0 kgdbwait` to the cmdline.txt in the boot partition
 * use `connect_gdb.sh` to connect the gdb console to the remote target
-* Add initial breakpoints to `gdb_cmds.txt`
-    * You will loose the ability to halt the kernel unless you set a breakpoint that triggers
+* Add initial breakpoints you wish to `gdb_cmds.txt`
 * DO NOT step it does weirdness
     * Given the kernel's complexity we do not get source or intruction level stepping. Its an inate limitation
+    * To get to arbitrary code, our prefered method is to break at the high level symbol, find the address of an instruction close to where you want to poke around in the function, then set that as a break point, clearing the initial break point.
+    * NOTE that when you enter the second break point you are not in the same function call or exeution context as when you hit the start of the fucntion. You do not have fine grain control.
 
 # KDMX and the new Debug ENV
 
@@ -67,7 +68,7 @@ Note that before we connect gdb ensure that kdb was triggered on terminal 2 (`ec
 
 # lx-cmds
 
-# Way to jump to arbitrary code?
+The lx-commands give one powerful tools for examining the kenrel in GDB. See [here](https://docs.kernel.org/dev-tools/gdb-kernel-debugging.html) for the official reference. The required config and init commands required were shown earlier [here](../P1.2/README.md#build-kernel-with-proper-debug-symbols-and-build-cross-debugger). But we want to make a dedicated section for discussion of these scripts. Running lx- then hitting tab in the GDB prompt will give a list of what is avaiable.
 
 # GDB Cheat Sheet 2.0
 
@@ -94,8 +95,9 @@ Note that before we connect gdb ensure that kdb was triggered on terminal 2 (`ec
 | `info variables` | Prints all local and global vars | DONT DO, huge list |
 | `info local` | See local variables | - |
 | `info args` | See function input args | - |
-
-
+| `info symbol <addr>` | Given an address look it up in the symbol table | - | 
+| `info address <symbol>` | Given a symbol look up its addr | - | 
+| `set print pretty on` | Prints variables and data structures all pretty like | - |
+| `print <var>` | Print a variable | - | 
 
 **FRAME up**??
-
