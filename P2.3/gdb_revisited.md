@@ -101,3 +101,4 @@ The lx-commands give one powerful tools for examining the kenrel in GDB. See [he
 | `print <var>` | Print a variable | - | 
 | `up/down <n>` | Move up or down the call stack n frames | - |
 | `set $x=7` | Define a variable x | - |
+| `disable / enable <n>` | Enable or Disable bp n | - |

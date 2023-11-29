@@ -27,7 +27,7 @@ fi
 read -p 'Have you booted and logged into device? (y/n): ' build
 if [ "$build" = "y" ]; then
     minicom -S minicom_recv.txt < ./scripts/escape.txt
-    sz $1 > /dev/ttyUSB0 < /dev/ttyUSB0
+    sz $1 > /dev/pts/1 < /dev/pts/1
 else
     echo "Please log in.."
     exit
