@@ -31,6 +31,8 @@ mib_stat_start = 0x400
 
 # Kmod to Convert to physical addrs
 
+We will create a kernel module to access the following function to convert to physical addresses:
+
 ```C
 #include <asm/memory.h>
 
