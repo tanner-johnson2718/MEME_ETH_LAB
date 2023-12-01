@@ -34,4 +34,6 @@ export SD_IMAGE="${BUILDROOT_DIR}/output/images/sdcard.img"
 export EXTERNAL_PACKAGES_DIR="extern_packages"
 
 export GDB_CMD="scripts/gdb_cmds.txt"
+export AARCH_GDB="./${BUILDROOT_DIR}/output/host/bin/aarch64-linux-gdb"
+export LX_FLAG_GDB="set auto-load safe-path ./buildroot/output/build/linux-custom/"
 export ENV_INIT="true"
