@@ -60,6 +60,10 @@ It will use a sysfs interface where we write an adress to a `v_addr` file and th
 
 Oddly enough the address falls between two mapped regions of memory but itself appears to not be mapped?
 
-# TX / RX queues
+# IOMEM
 
-We start this where we left off in the first section. The question where are looking to answer is why are the q's labeled from 0-16 but only 0,1,2,3,and 16 are used?
+* https://www.kernel.org/doc/html/v5.10/core-api/bus-virt-phys-mapping.html
+* https://lwn.net/Articles/653585/
+* `arch/arm64/include/asm/memory.h` -> virt_to_phys with comment not use in driver code
+    * points to `include/linux/dma-mapping.h`
+* `arch/arm64/include/asm/io.h` -> intersting stuff in that there file
