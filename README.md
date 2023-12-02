@@ -42,18 +42,4 @@ Some defining goals to get the project going and figure out a starting point are
     * [X] MDIO bus
     * [X] KDB
     * [X] BCM54213PE Driver 
-* [ ] [P2.3](./P2.3/) Reverse Engineer the BCM 2711 genet driver
-* [ ] Track a Packet from Send to Recv in Userspaces
-* [ ] Random Clean Up
-    * [ ] Address Families?
-    * [ ] NIC Ring Buffer
-
-# Part 3 RPI Network Hardware Exploration
-
-* [ ] How are Inturrupts generated
-* [ ] MII and MDIO
-* [ ] Device Tree
-* [ ] NIC on RPI
-* [ ] What is each wire on a Cat 5e cable doing
-* [ ] What happens when I first plug in a cord
-* [ ] Trace the physcial connections from
+* [X] [P2.3](./P2.3/) Reverse Engineer the BCM 2711 genet driver
