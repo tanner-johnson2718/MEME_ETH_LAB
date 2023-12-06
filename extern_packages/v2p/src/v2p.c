@@ -5,19 +5,15 @@
 
 static unsigned long p_addr = 0;
 static unsigned long v_addr = 0;
-static unsigned long b_addr = 0;
 
 static ssize_t v2p_p_show(struct kobject* kobj, struct kobj_attribute *attr, char *buf);
 static ssize_t v2p_p_store(struct kobject* kobj, struct kobj_attribute *attr, const char *buf, size_t count);
 static ssize_t v2p_v_show(struct kobject* kobj, struct kobj_attribute *attr, char *buf);
 static ssize_t v2p_v_store(struct kobject* kobj, struct kobj_attribute *attr, const char *buf, size_t count);
-static ssize_t v2p_b_show(struct kobject* kobj, struct kobj_attribute *attr, char *buf);
-static ssize_t v2p_b_store(struct kobject* kobj, struct kobj_attribute *attr, const char *buf, size_t count);
 
 static struct kobject *v2p_kobj;
 static struct kobj_attribute v2p_p_attr = __ATTR(p_addr, 0660, v2p_p_show, v2p_p_store);
 static struct kobj_attribute v2p_v_attr = __ATTR(v_addr, 0660, v2p_v_show, v2p_v_store);
-static struct kobj_attribute v2p_b_attr = __ATTR(v_addr, 0660, v2p_b_show, v2p_b_store);
 
 static ssize_t v2p_p_show(struct kobject* kobj, struct kobj_attribute *attr, char *buf)
 {
@@ -39,19 +35,6 @@ static ssize_t v2p_v_show(struct kobject* kobj, struct kobj_attribute *attr, cha
 static ssize_t v2p_v_store(struct kobject* kobj, struct kobj_attribute *attr, const char *buf, size_t count)
 {    
     v_addr = simple_strtoul(buf, NULL, 16);
-    p_addr = virt_to_phys((void*) v_addr);
-    b_addr = virt_to_bus((void*) v_addr);
-    return count;
-}
-
-static ssize_t v2p_b_show(struct kobject* kobj, struct kobj_attribute *attr, char *buf)
-{
-    return sprintf(buf, "0x%lx\n", b_addr);
-}
-
-static ssize_t v2p_b_store(struct kobject* kobj, struct kobj_attribute *attr, const char *buf, size_t count)
-{    
-    b_addr = simple_strtoul(buf, NULL, 16);
     p_addr = virt_to_phys((void*) v_addr);
     return count;
 }
