@@ -1,4 +1,4 @@
-# Hacking the BCM54213PE Driver
+# Reverse Engineering the BCM54213PE Driver
 
 * BCM54213PE driver loc -> linux-*/drivers/net/phy/broadcom.c
 * installed phytool and ethtool from buildroot packages menu
